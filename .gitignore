@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+analysis-projects/
+dist/
+*.egg-info/
+.env
+*.log
+tmp/
+runtime_config.json
+*_api_key*
+*_secret*

@@ -1,0 +1,25 @@
+[project]
+name = "video-analysis-mvp"
+version = "0.1.0"
+description = "Local-first video analysis MVP for shot, audio, rhythm, and report generation."
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+api = [
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+analyze-video = "video_analysis_mvp.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
