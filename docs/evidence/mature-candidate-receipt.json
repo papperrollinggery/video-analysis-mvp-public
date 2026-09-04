@@ -1,11 +1,11 @@
 {
   "schema_id": "vew-mature-candidate-receipt/v1",
   "status": "v0.2.0_release_candidate_pre_push",
-  "recorded_at": "2026-09-04T15:03:24+08:00",
+  "recorded_at": "2026-09-04T15:08:04+08:00",
   "candidate": {
     "scope": "local mature candidate only",
     "file_count": 204,
-    "sha256": "b80792c243a24ad09fa0212f31c4ced28d500b2c7816e13d983bfd870ac1c765",
+    "sha256": "710534cfa4a7449faceba0257c1f525c9aba263a11cbfe38081258888e4bd61c",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -180,23 +180,24 @@
     "repair": "Legacy shot/vision evidence made read-only; retired POST routes return 410; explicit Finalize shares the readiness service; ads keeper compatibility constrained server-side.",
     "overcorrection_delta_review": "CLEAN: no P0-P3 finding and no supported-function regression",
     "final_independent_verdict": "APPROVE WITH RESIDUALS: no P0/P1/P2; accepted P3 screenshot freshness and external URL/provider boundaries",
-    "publication_metadata_review": "APPROVE: no P0-P3 after canonical metadata, privacy neutralization, and staged receipt verification"
+    "publication_metadata_review": "APPROVE: no P0-P3 after canonical metadata, privacy neutralization, and staged receipt verification",
+    "ci_trigger_delta_review": "CLEAN: PR events remain covered, main push remains covered, feature-branch duplicate matrix removed"
   },
   "evidence_files": [
     {
       "path": "docs/screenshots/ui-acceptance-receipt.json",
       "size_bytes": 9552,
-      "sha256": "182f4e44b6d6fa2a06b7db48e925e8ea0d4447fa65d80a530803b544366d7b11"
+      "sha256": "faf28d6881b95c21d3a233255aca7da787eaa0d779e376621656d9aeed5cb446"
     },
     {
       "path": "docs/release-readiness.md",
-      "size_bytes": 8922,
-      "sha256": "5b8529e5e7bfd2a9523f27b2909a6938a2b0c819b64dea8d6d2b4b73192ca680"
+      "size_bytes": 9052,
+      "sha256": "65cba644c5b0d608032ab69983c8b999e79a3dc1362f6863b49182913abad2f2"
     },
     {
       "path": "docs/cold-review.md",
-      "size_bytes": 4909,
-      "sha256": "685c3c433855c77453b4490d55ac0167cecb9b3b768adafbe2503fb7f12d527e"
+      "size_bytes": 5358,
+      "sha256": "ef802173aac1f1d19f74e6a351e7383b83d87574dd6d07a59d7a37ac6ef6df28"
     },
     {
       "path": "progress.txt",

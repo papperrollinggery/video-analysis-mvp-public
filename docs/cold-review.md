@@ -80,7 +80,7 @@ reconnected and publication was explicitly authorized. README badges/status,
 package project URLs, citation metadata, `llms.txt`, security reporting,
 launch/growth wording, changelog and v0.2.0 release notes were updated without a
 runtime-code change. The resulting 204-file product digest is
-`b80792c243a24ad09fa0212f31c4ced28d500b2c7816e13d983bfd870ac1c765`.
+`710534cfa4a7449faceba0257c1f525c9aba263a11cbfe38081258888e4bd61c`.
 Its independent staged review found one P2 contradiction in the deferred list:
 canonical URLs, badges and GitHub release were still labelled deferred after
 being enabled. The minimal wording repair retained only genuinely unavailable
@@ -89,3 +89,10 @@ staged verification matched 209 index paths, 204 product files, the digest
 above and all four evidence bindings, with no remaining P0-P3. The publication
 metadata delta is approved for commit; GitHub Actions must still pass on the
 exact pushed revision before merge and release.
+
+The first remote push exposed duplicate `push` and `pull_request` CI matrices.
+The release delta limits branch pushes to `main`, leaving one PR matrix and one
+post-merge main matrix. Its focused independent review was CLEAN: YAML parsed,
+all pull-request synchronization events remain covered, and merge/main pushes
+still run CI. The superseded duplicate runs were sent cancellation requests;
+the exact new PR checks remain mandatory before merge.

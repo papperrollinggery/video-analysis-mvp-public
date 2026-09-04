@@ -12,7 +12,7 @@ this receipt does not prove a separate deployment or package-registry upload.
 The current product file set contains **204** non-ignored files and has digest:
 
 ```text
-sha256:b80792c243a24ad09fa0212f31c4ced28d500b2c7816e13d983bfd870ac1c765
+sha256:710534cfa4a7449faceba0257c1f525c9aba263a11cbfe38081258888e4bd61c
 ```
 
 The digest hashes `mode\0path\0size\0bytes\0` in sorted Git-candidate order.
@@ -74,6 +74,8 @@ release notes were added.
 - visibility: public;
 - private vulnerability reporting: enabled and read back through GitHub;
 - repository description and 11 accurate discovery topics: updated and read back;
+- CI trigger: pull requests run once; branch pushes run only on `main`, avoiding
+  duplicate feature-branch push and PR matrices;
 - existing pull requests, issues, releases and Actions runs before this upgrade:
   none.
 
