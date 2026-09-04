@@ -391,6 +391,7 @@ sh scripts/install-smoke-test.sh
 sh scripts/benchmark-audio.sh
 sh scripts/test-client-exports.sh
 sh scripts/audit-test-artifacts.sh
+sh scripts/verify-candidate-receipt.sh v0.2.0
 .venv/bin/analyze-video benchmark --output ./benchmark-output
 npm --prefix frontend run test:integration
 npm --prefix frontend run test:e2e
@@ -401,7 +402,15 @@ bandit -q -r src -ll
 pip-audit --local --skip-editable --progress-spinner off
 ```
 
-The last three commands require the pinned audit tools used by CI (`ruff==0.15.22`, `bandit==1.9.4`, and `pip-audit==2.10.1`). The smoke test creates temporary synthetic media and removes it on exit. It does not test external model providers, password-protected sources, or every codec.
+The candidate-receipt command is a release/tag gate, not a normal development
+test: it verifies the product digest, mature-candidate receipt, four separately
+bound evidence files, and UI evidence against the named immutable Git tree. Ordinary
+pull requests still validate screenshot, frontend-source and served-asset
+hashes without pretending they are the v0.2.0 release snapshot. The last three
+commands require the pinned audit tools used by CI (`ruff==0.15.22`,
+`bandit==1.9.4`, and `pip-audit==2.10.1`). The smoke test creates temporary
+synthetic media and removes it on exit. It does not test external model
+providers, password-protected sources, or every codec.
 
 ## Architecture and project direction
 
