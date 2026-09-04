@@ -1,19 +1,19 @@
-# v0.2.1 release readiness
+# v0.2.2 release readiness
 
 Status: **local candidate gates and independent final review passed; exact PR
-and tag CI remain required**. This file records evidence for the v0.2.1 maintenance
+CI, tag CI and release readback remain required**. This file records evidence for the v0.2.2 integrity
 candidate. It does not prove publication, provider accuracy, adoption or a
 stable cross-platform release.
 
 ## Candidate scope
 
-v0.2.1 contains the post-v0.2.0 release-governance fixes, reliable npm audit
+v0.2.2 retains the v0.2.1 release-governance fixes, reliable npm audit
 result classification, separately verified GitHub Actions v7 upgrades, release
 metadata consistency checks and safer Dependabot grouping. It does not change
 the analysis, human-review, Finalize or client-export product workflow.
 
-The frozen candidate contains **210 product files** with SHA-256
-`3f7bd9ad96e941afb78aafb48961f5acb031234d2bdb6863f79c2472c1a56681`.
+The frozen candidate contains **211 product files** with SHA-256
+`f4bedd8e1a70c6df56525f573aeb116bc8dbf4ac27ce02f76311ac2bc338a90f`.
 The same binding is recorded in both
 `docs/screenshots/ui-acceptance-receipt.json` and
 `docs/evidence/mature-candidate-receipt.json`. The product digest excludes only
@@ -28,10 +28,10 @@ the mature receipt:
 
 ## Fresh local verification
 
-| Gate | v0.2.1 candidate result |
+| Gate | v0.2.2 candidate result |
 | --- | --- |
-| Full Python suite | 520 passed, 29 optional-runtime skips, 393 subtests in 47.32 s; exit 0 |
-| Release metadata | pyproject, package, lock, Python, MCP client, citation, README, changelog, release note and mature status agree on 0.2.1 |
+| Full Python suite | 520 passed, 29 optional-runtime skips, 393 subtests in 48.18 s after the independent verdict was bound; exit 0 |
+| Release metadata | version fields, release language and version-scoped current review are aligned on 0.2.2 |
 | Python lint/source scan | Ruff 0.15.22 clean; Bandit 1.9.4 found no medium/high issue |
 | Python dependency audit | pip-audit 2.10.1 reported no known vulnerability; unpublished editable package explicitly skipped |
 | Frontend install/audit | clean `npm ci`; 78 packages audited; 0 vulnerabilities |
@@ -47,7 +47,7 @@ the mature receipt:
 
 ## GitHub maintenance disposition
 
-- PR #7 repaired release-receipt scope and immutable-tag verification.
+- PR #7 repaired release-receipt scope and tagged-tree verification.
 - PR #8 classified npm advisory endpoint outages without hiding confirmed
   high/critical findings or unknown failures.
 - Dependabot PRs #2, #3, #4 and #5 were each rebased onto the cumulative current
@@ -57,8 +57,19 @@ the mature receipt:
   major upgrades while leaving the packaged build mirror and UI evidence stale.
   Dependabot now groups frontend minor/patch updates only; future major updates
   must be reviewed independently.
+- v0.2.1 passed its candidate, main and tagged-tree CI and was published with a
+  matching receipt. A later independent readback found that its platform-level
+  immutability wording lacked a state check; the public release page now records
+  creation with the setting disabled and a later API result of `immutable: true`
+  after enablement and a note update.
+- Repository release immutability is enabled. GitHub's
+  release API, not this local file, decides whether v0.2.2 is platform-locked
+  after publication.
+- Post-freeze PRs #10-#14 were triaged and closed with exact asset-drift,
+  visual-review, compiler-major or paired-peer-dependency requirements. None was
+  merged into this candidate.
 - The release-candidate base before version freeze is
-  `2e3fd3bfe39e9b82f51f41923b2f23090172ff07`.
+  `834507cc1e92779d8231d3b2fc1019adee9f6193`.
 
 ## Security and truth boundaries
 
@@ -75,9 +86,8 @@ the mature receipt:
 
 ## Remaining publication gates
 
-1. Freeze and independently recompute the exact product digest and four
-   evidence-file bindings.
-2. Pass the complete GitHub PR matrix on the exact candidate SHA.
-3. Merge without content changes, create immutable tag `v0.2.1`, and pass the
+1. Pass the complete GitHub PR matrix on the exact candidate SHA.
+2. Merge without content changes, create tag `v0.2.2`, and pass the
    tag-only release receipt gate plus the normal tag CI matrix.
-4. Create and read back the GitHub pre-release and attached candidate receipt.
+3. Create the pre-release as a draft with its receipt, publish it, and read back
+   GitHub's immutable flag, tag target and asset digest.

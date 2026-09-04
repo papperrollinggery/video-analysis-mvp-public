@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software in research, please cite the software and the exact revision you used."
 type: software
 title: "Video Evidence Workbench"
-version: 0.2.1
+version: 0.2.2
 license: MIT
 date-released: 2026-09-04
 repository-code: "https://github.com/papperrollinggery/video-analysis-mvp-public"

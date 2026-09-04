@@ -1,5 +1,28 @@
 # Mature candidate independent cold review
 
+## v0.2.2 release-integrity delta
+
+Status: **APPROVE**. Independent review found no remaining P0, P1, P2 or P3
+finding.
+
+The v0.2.2 delta corrects the prior platform-immutability wording, advances
+version metadata and records the time-dependent state: the setting was disabled
+when v0.2.1 was created, then the API reported `immutable: true` after enablement
+and a release-note update. It does not inherit the v0.2.1 approval. Independent
+review independently matched 211 product files at
+`f4bedd8e1a70c6df56525f573aeb116bc8dbf4ac27ce02f76311ac2bc338a90f`
+and all four evidence bindings. It confirmed the public v0.2.1 timeline, current
+`immutable: true` API state, successful release attestation verification,
+version metadata and the draft-first asset-then-publish strategy for v0.2.2.
+No destructive release-mutation probe was used.
+
+The pre-verdict suite passed 519 tests with 29 optional-runtime skips and 393
+subtests; the only excluded metadata test deliberately required this current
+version approval. Exact v0.2.2 PR, tagged-tree CI, release publication and final
+API/attestation readback remain external gates.
+
+The sections below preserve prior-version review evidence.
+
 ## v0.2.1 maintenance delta
 
 Status: **APPROVE**. Independent review found no remaining P0, P1, P2 or P3

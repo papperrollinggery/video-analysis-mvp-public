@@ -3,11 +3,27 @@
 All notable public changes are documented here. The project follows Semantic
 Versioning while its APIs and on-disk schemas remain pre-1.0.
 
+## [0.2.2] - 2026-09-04
+
+### Fixed
+
+- corrected release materials that used “immutable tag/tree” as shorthand
+  before platform state had been checked;
+- now describes CI as binding a named tagged Git tree and treats the GitHub API
+  as the authority for platform-level release immutability.
+
+### Release integrity
+
+- enabled GitHub release immutability before creating v0.2.2;
+- records the time-dependent v0.2.1 state without inferring policy behavior:
+  release immutability was disabled at creation, then the API reported
+  `immutable: true` after policy enablement and a release-note update.
+
 ## [0.2.1] - 2026-09-04
 
 ### Changed
 
-- moved frozen candidate-digest enforcement to immutable release tags so routine
+- moved frozen candidate-digest enforcement to tagged release trees so routine
   pull requests retain UI, screenshot and asset checks without inheriting a
   historical whole-tree digest;
 - upgraded the maintained GitHub Actions runtime set to checkout, setup-python,
@@ -73,4 +89,5 @@ migration details.
 
 [0.2.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.0
 [0.2.1]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.1
+[0.2.2]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.2
 [0.1.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/commit/8419b3a1d1ff09cd355679f5d89d97f7ff524f86
