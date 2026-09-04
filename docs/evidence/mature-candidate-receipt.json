@@ -1,11 +1,11 @@
 {
   "schema_id": "vew-mature-candidate-receipt/v1",
-  "status": "v0.2.1_release_candidate_pre_push",
-  "recorded_at": "2026-09-04T21:12:29+08:00",
+  "status": "v0.2.2_release_candidate_pre_push",
+  "recorded_at": "2026-09-04T21:55:30+08:00",
   "candidate": {
     "scope": "local mature candidate only",
-    "file_count": 210,
-    "sha256": "3f7bd9ad96e941afb78aafb48961f5acb031234d2bdb6863f79c2472c1a56681",
+    "file_count": 211,
+    "sha256": "f4bedd8e1a70c6df56525f573aeb116bc8dbf4ac27ce02f76311ac2bc338a90f",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -20,14 +20,14 @@
       "local_verification_commit": null,
       "boundary": "This receipt binds the pre-commit local candidate. GitHub records the later branch, merged commit, checks and release tag separately."
     },
-    "publication_metadata_delta": "v0.2.1 maintenance candidate: release-gate fixes, CI audit classification, GitHub Actions v7, version metadata and Dependabot grouping; no analysis-workflow expansion."
+    "publication_metadata_delta": "v0.2.2 integrity correction: precise tagged-tree wording, API-authoritative release immutability and version metadata; no analysis-workflow expansion."
   },
   "verification": [
     {
       "id": "python_full",
       "command": ".venv/bin/python -m pytest -q tests",
       "exit_code": 0,
-      "result": "520 passed, 29 skipped, 393 subtests passed in 47.32s"
+      "result": "520 passed, 29 skipped, 393 subtests passed in 48.18s after the version-scoped review approval was bound"
     },
     {
       "id": "focused_security_codex_bridge_migration",
@@ -171,28 +171,33 @@
       "status": "approved",
       "verdict": "APPROVE: no remaining P0-P3; candidate digest and release evidence independently matched after the version-scoped review repair.",
       "boundary": "No v0.2.0 verdict is inherited. Exact PR CI, tag CI and GitHub publication remain external gates."
+    },
+    "v0.2.2": {
+      "status": "approved",
+      "verdict": "APPROVE: no remaining P0-P3; 211-file product digest, four evidence bindings, time-scoped v0.2.1 correction, API/attestation state, draft-first immutable-release strategy and version metadata independently verified.",
+      "boundary": "No earlier verdict is inherited. Exact v0.2.2 PR CI, tagged-tree CI, publication and post-publication API/attestation readback remain external gates."
     }
   },
   "evidence_files": [
     {
       "path": "docs/screenshots/ui-acceptance-receipt.json",
       "size_bytes": 9552,
-      "sha256": "aab2bcb3c0b728b1382027bb1c564d08468dec0e8254fa97066709e0f37486e6"
+      "sha256": "d709a79a16b7bea66052d1a19c1262f4bcaf07ac57ff332f1030af97db052ef2"
     },
     {
       "path": "docs/release-readiness.md",
-      "size_bytes": 5078,
-      "sha256": "96e707ead179ca89cccfe3bbeb04919dfaa3376fc9563bd1d8280164db632b4e"
+      "size_bytes": 5744,
+      "sha256": "5fc730e52d353136186b2ce3be6f10bd682efc44fed5f9f715eb6fa6c73158ef"
     },
     {
       "path": "docs/cold-review.md",
-      "size_bytes": 10232,
-      "sha256": "783b19bf9ed73ef6822475a7caefd682b87aa31dc00d299c2e955716b840fd36"
+      "size_bytes": 11414,
+      "sha256": "650c9a76c8eae90a6ba5aa54fc352b07967dabd52e6eda66f1c25725567c7dbb"
     },
     {
       "path": "progress.txt",
-      "size_bytes": 27043,
-      "sha256": "8efba1c24f81962221f7d3896702acade11348430b52aba62324481f76229ff8"
+      "size_bytes": 28226,
+      "sha256": "2a1431bd3010493647da71d3f6dbd03746ca786b0e42d689039298d29afdaa21"
     }
   ],
   "known_limits": [

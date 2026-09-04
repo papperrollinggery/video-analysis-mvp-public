@@ -8,9 +8,9 @@ from pathlib import Path
 
 
 class ReleaseMetadataTest(unittest.TestCase):
-    def test_v021_release_metadata_is_consistent(self) -> None:
+    def test_v022_release_metadata_is_consistent(self) -> None:
         repo = Path(__file__).parents[1]
-        expected = "0.2.1"
+        expected = "0.2.2"
 
         project = tomllib.loads((repo / "pyproject.toml").read_text(encoding="utf-8"))["project"]
         self.assertEqual(expected, project["version"])
@@ -42,6 +42,18 @@ class ReleaseMetadataTest(unittest.TestCase):
         readme = (repo / "README.md").read_text(encoding="utf-8")
         self.assertIn(f"Project status: v{expected} pre-1.0 release candidate", readme)
         self.assertIn(f"scripts/verify-candidate-receipt.sh v{expected}", readme)
+        release_language = "\n".join(
+            [
+                readme,
+                changelog,
+                (repo / "docs" / "quality-metrics.md").read_text(encoding="utf-8"),
+                (repo / "docs" / "release-readiness.md").read_text(encoding="utf-8"),
+                (repo / "docs" / "releases" / "v0.2.1.md").read_text(encoding="utf-8"),
+                (repo / "docs" / "releases" / f"v{expected}.md").read_text(encoding="utf-8"),
+            ]
+        )
+        self.assertNotIn("immutable release tag", release_language)
+        self.assertNotIn("immutable Git tree", release_language)
 
         mature = json.loads(
             (repo / "docs" / "evidence" / "mature-candidate-receipt.json").read_text(encoding="utf-8")

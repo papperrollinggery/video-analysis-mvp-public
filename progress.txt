@@ -1,5 +1,11 @@
 VIDEO EVIDENCE WORKBENCH progress log
 
+2026-09-04 v0.2.2 release-integrity correction
+- Independent final remote review found that v0.2.1 documentation used “immutable release/tag” wording before GitHub platform state had been checked. The release/tag/asset evidence was correct, but the platform-lock claim lacked evidence.
+- Enabled repository release immutability and updated the v0.2.1 release note. A fresh API read then reported `immutable:true`, and `gh release verify v0.2.1` verified the tag and attached receipt. No destructive mutation probe was run; the timeline is reported without guessing why current API behavior differs from the general future-release documentation.
+- v0.2.2 replaces ambiguous shorthand with “tagged Git tree/current tag commit” and will use the API as authority for platform immutability. Exact candidate, PR, tag, asset and GitHub immutability readback remain mandatory before completion.
+- Independent v0.2.2 pre-release review approved with no remaining P0-P3 after matching 211 product files, all four evidence bindings, the public v0.2.1 timeline, current API/attestation state, version metadata and the draft-first immutable-release strategy.
+
 2026-09-04 v0.2.1 maintenance candidate
 - Corrected premature completion: the task was reopened because five Dependabot PRs remained unhandled and v0.2.0 did not contain the post-release receipt-gate repair.
 - Added a tested npm-audit result classifier. Confirmed high/critical findings, malformed counts and unknown errors fail; only an explicitly identified npm advisory endpoint timeout/503 is reported as unavailable, never as a clean audit.
@@ -8,7 +14,7 @@ VIDEO EVIDENCE WORKBENCH progress log
 - Updated Python, frontend, lock, MCP client, citation, README, changelog and release-note metadata to 0.2.1 and added an automated consistency contract.
 - Fresh local gates: 520 passed, 29 skipped, 393 subtests in 47.32 s; Ruff/Bandit clean; pip-audit and npm audit found no known vulnerability; frontend integration/PDF diagnostics/build/E2E passed; real XLSX/PDF/browser 71/71 passed in 63.015 s; all workflow smokes passed; video benchmark 6/6 functional and 5/5 accuracy-gated in 5.646 s; audio benchmark 5/5 in 0.071 s; 215-file clean install/migration/wheel/served-asset parity passed.
 - Frozen product digest independently matched 210 files at `3f7bd9ad96e941afb78aafb48961f5acb031234d2bdb6863f79c2472c1a56681`. Final cold review approved with no remaining P0-P3 after the old v0.2.0 verdict was explicitly moved under history and v0.2.1 received its own verdict contract.
-- Exact PR CI, immutable v0.2.1 tag CI and GitHub pre-release publication remain mandatory before completion.
+- Exact v0.2.1 PR CI, tagged-tree CI and GitHub pre-release publication passed before the later platform-immutability wording correction.
 
 2026-07-15 product reset
 - Reframed the project from an internal ad-delivery operator into an open-source, local-first, auditable shot-level video research workbench.
