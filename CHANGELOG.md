@@ -3,6 +3,32 @@
 All notable public changes are documented here. The project follows Semantic
 Versioning while its APIs and on-disk schemas remain pre-1.0.
 
+## [0.2.1] - 2026-09-04
+
+### Changed
+
+- moved frozen candidate-digest enforcement to immutable release tags so routine
+  pull requests retain UI, screenshot and asset checks without inheriting a
+  historical whole-tree digest;
+- upgraded the maintained GitHub Actions runtime set to checkout, setup-python,
+  setup-node and upload-artifact v7 after full hosted-runner verification;
+- constrained grouped frontend dependency updates to minor and patch releases so
+  unrelated major upgrades receive separate compatibility and visual review.
+
+### Fixed
+
+- completed the release receipt gate by binding the mature candidate schema,
+  release status, product digest and separately hashed review evidence;
+- distinguished confirmed npm high/critical findings from advisory-service
+  outages while keeping malformed and unknown audit failures blocking.
+
+### Release boundary
+
+- this maintenance release does not expand live provider, Windows, ASR accuracy
+  or semantic sound-identity claims from v0.2.0;
+- the rejected grouped frontend-major update was not included because its built
+  asset mirror and UI acceptance evidence were stale.
+
 ## [0.2.0] - 2026-09-04
 
 ### Added
@@ -46,4 +72,5 @@ migration details.
 - Initial sanitized public prototype.
 
 [0.2.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.0
+[0.2.1]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.1
 [0.1.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/commit/8419b3a1d1ff09cd355679f5d89d97f7ff524f86

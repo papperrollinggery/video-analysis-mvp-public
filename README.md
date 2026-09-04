@@ -8,7 +8,7 @@ Turn a video into a reviewable, shot-level evidence package on your own machine.
 
 Video Evidence Workbench is an open-source, local-first workspace for researchers and builders who need inspectable video data rather than a black-box summary. It creates timecoded shots, keyframes, contact sheets, audio and rhythm data, human-review gates, lineage records, and portable HTML, CSV, Markdown, and JSON outputs.
 
-> Project status: v0.2.0 pre-1.0 release candidate. The deterministic short-video path, persistent run recovery, human review, explicit Finalize, migration, and requested client export passed the local candidate gates. The CI badge is the authoritative remote-build status; live provider contracts remain unverified. Shot boundaries and model annotations are evidence to review, not ground truth.
+> Project status: v0.2.1 pre-1.0 release candidate. The deterministic short-video path, persistent run recovery, human review, explicit Finalize, migration, and requested client export passed the local candidate gates. The CI badge is the authoritative remote-build status; live provider contracts remain unverified. Shot boundaries and model annotations are evidence to review, not ground truth.
 
 ![Running Video Evidence Workbench production workspace with a local synthetic demo](docs/screenshots/workspace-desktop-1440x900.png)
 
@@ -391,7 +391,7 @@ sh scripts/install-smoke-test.sh
 sh scripts/benchmark-audio.sh
 sh scripts/test-client-exports.sh
 sh scripts/audit-test-artifacts.sh
-sh scripts/verify-candidate-receipt.sh v0.2.0
+sh scripts/verify-candidate-receipt.sh v0.2.1
 .venv/bin/analyze-video benchmark --output ./benchmark-output
 npm --prefix frontend run test:integration
 npm --prefix frontend run test:e2e
@@ -406,7 +406,7 @@ The candidate-receipt command is a release/tag gate, not a normal development
 test: it verifies the product digest, mature-candidate receipt, four separately
 bound evidence files, and UI evidence against the named immutable Git tree. Ordinary
 pull requests still validate screenshot, frontend-source and served-asset
-hashes without pretending they are the v0.2.0 release snapshot. The last three
+hashes without pretending they are the current release snapshot. The last three
 commands require the pinned audit tools used by CI (`ruff==0.15.22`,
 `bandit==1.9.4`, and `pip-audit==2.10.1`). The smoke test creates temporary
 synthetic media and removes it on exit. It does not test external model

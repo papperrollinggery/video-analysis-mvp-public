@@ -632,7 +632,7 @@ class FrontendContractTest(unittest.TestCase):
                 wrong_tag,
                 reviewed,
                 read_bytes,
-                expected_release_status="v0.2.0_release_candidate_pre_push",
+                expected_release_status="v0.2.1_release_candidate_pre_push",
             )
 
         missing_verification = json.loads(json.dumps(mature))

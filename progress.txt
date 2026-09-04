@@ -1,5 +1,15 @@
 VIDEO EVIDENCE WORKBENCH progress log
 
+2026-09-04 v0.2.1 maintenance candidate
+- Corrected premature completion: the task was reopened because five Dependabot PRs remained unhandled and v0.2.0 did not contain the post-release receipt-gate repair.
+- Added a tested npm-audit result classifier. Confirmed high/critical findings, malformed counts and unknown errors fail; only an explicitly identified npm advisory endpoint timeout/503 is reported as unavailable, never as a clean audit.
+- Rebased and fully verified GitHub Actions PRs #2/#3/#4/#5 in cumulative order, then merged checkout, upload-artifact, setup-python and setup-node v7. Each exact PR SHA passed frontend, security, minimum dependency, Linux/macOS Python 3.11/3.12 and real XLSX/PDF/browser jobs.
+- Closed grouped frontend PR #6 without merge after independent review found stale packaged assets and UI acceptance evidence. Dependabot now groups frontend minor/patch versions only so major upgrades can be reviewed separately.
+- Updated Python, frontend, lock, MCP client, citation, README, changelog and release-note metadata to 0.2.1 and added an automated consistency contract.
+- Fresh local gates: 520 passed, 29 skipped, 393 subtests in 47.32 s; Ruff/Bandit clean; pip-audit and npm audit found no known vulnerability; frontend integration/PDF diagnostics/build/E2E passed; real XLSX/PDF/browser 71/71 passed in 63.015 s; all workflow smokes passed; video benchmark 6/6 functional and 5/5 accuracy-gated in 5.646 s; audio benchmark 5/5 in 0.071 s; 215-file clean install/migration/wheel/served-asset parity passed.
+- Frozen product digest independently matched 210 files at `3f7bd9ad96e941afb78aafb48961f5acb031234d2bdb6863f79c2472c1a56681`. Final cold review approved with no remaining P0-P3 after the old v0.2.0 verdict was explicitly moved under history and v0.2.1 received its own verdict contract.
+- Exact PR CI, immutable v0.2.1 tag CI and GitHub pre-release publication remain mandatory before completion.
+
 2026-07-15 product reset
 - Reframed the project from an internal ad-delivery operator into an open-source, local-first, auditable shot-level video research workbench.
 - Removed the production UI's silent mock fallback, fixed project-scoped navigation, and replaced the canvas/chat-first surface with player, shot strip, inspector, table, readiness, and evidence deliverables.
