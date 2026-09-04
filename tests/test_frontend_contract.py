@@ -6,9 +6,69 @@ import os
 import re
 import subprocess
 import unittest
+from collections.abc import Callable
+from io import BytesIO
 from pathlib import Path
 
 from PIL import Image
+
+
+RELEASE_EVIDENCE_PATHS = {
+    "docs/screenshots/ui-acceptance-receipt.json",
+    "docs/release-readiness.md",
+    "docs/cold-review.md",
+    "progress.txt",
+}
+
+
+def assert_release_evidence_bindings(
+    mature_receipt: dict[str, object],
+    reviewed_candidate: dict[str, object],
+    read_bytes: Callable[[str], bytes],
+    *,
+    expected_release_status: str | None = None,
+) -> None:
+    if mature_receipt.get("schema_id") != "vew-mature-candidate-receipt/v1":
+        raise AssertionError("mature receipt schema_id is unsupported")
+    status = mature_receipt.get("status")
+    if not isinstance(status, str) or not re.fullmatch(
+        r"v[0-9][0-9A-Za-z.-]*_release_candidate_pre_push",
+        status,
+    ):
+        raise AssertionError("mature receipt status is not a release-candidate status")
+    if expected_release_status is not None and status != expected_release_status:
+        raise AssertionError("mature receipt status does not match the release tag")
+    verification = mature_receipt.get("verification")
+    if not isinstance(verification, list) or not verification:
+        raise AssertionError("mature receipt verification must be a non-empty list")
+
+    candidate = mature_receipt.get("candidate")
+    if not isinstance(candidate, dict):
+        raise AssertionError("mature receipt candidate must be an object")
+    for field in ("file_count", "sha256", "excluded_paths"):
+        if candidate.get(field) != reviewed_candidate.get(field):
+            raise AssertionError(f"mature receipt candidate {field} does not match UI receipt")
+
+    evidence = mature_receipt.get("evidence_files")
+    if not isinstance(evidence, list):
+        raise AssertionError("mature receipt evidence_files must be a list")
+    paths = [item.get("path") for item in evidence if isinstance(item, dict)]
+    if (
+        len(paths) != len(evidence)
+        or not all(isinstance(path, str) for path in paths)
+        or len(paths) != len(set(paths))
+    ):
+        raise AssertionError("mature receipt evidence paths must be unique strings")
+    if set(paths) != RELEASE_EVIDENCE_PATHS:
+        raise AssertionError("mature receipt evidence paths do not match the release contract")
+
+    for item in evidence:
+        path = item["path"]
+        payload = read_bytes(path)
+        if item.get("size_bytes") != len(payload):
+            raise AssertionError(f"mature receipt evidence size is stale: {path}")
+        if item.get("sha256") != hashlib.sha256(payload).hexdigest():
+            raise AssertionError(f"mature receipt evidence digest is stale: {path}")
 
 
 class FrontendContractTest(unittest.TestCase):
@@ -301,7 +361,46 @@ class FrontendContractTest(unittest.TestCase):
         self.assertIn("npm run test:integration", self.ci)
 
     def test_ui_acceptance_receipt_binds_current_assets_and_screenshots(self) -> None:
-        receipt = self.ui_receipt
+        enforce_candidate = os.environ.get("VEW_ENFORCE_CANDIDATE_DIGEST") == "1"
+        candidate_ref = os.environ.get("VEW_CANDIDATE_REF", "").strip() if enforce_candidate else ""
+        candidate_files: dict[str, tuple[str, bytes]] | None = None
+        if candidate_ref:
+            if candidate_ref.startswith("-"):
+                self.fail("candidate ref must not start with '-'")
+            tree_oid = subprocess.check_output(
+                ["git", "rev-parse", "--verify", "--end-of-options", f"{candidate_ref}^{{tree}}"],
+                cwd=self.repo,
+                text=True,
+            ).strip()
+            self.assertRegex(tree_oid, r"^[0-9a-f]{40,64}$")
+            candidate_files = {}
+            tree = subprocess.check_output(
+                ["git", "ls-tree", "-r", "-z", "--full-tree", tree_oid],
+                cwd=self.repo,
+            )
+            for raw_entry in tree.split(b"\0"):
+                if not raw_entry:
+                    continue
+                metadata, raw_path = raw_entry.split(b"\t", 1)
+                mode, object_type, object_id = metadata.decode("ascii").split()
+                self.assertEqual("blob", object_type)
+                candidate_files[raw_path.decode("utf-8")] = (
+                    mode,
+                    subprocess.check_output(["git", "cat-file", "blob", object_id], cwd=self.repo),
+                )
+
+        def read_candidate_bytes(relative: str) -> bytes:
+            if candidate_files is not None:
+                try:
+                    return candidate_files[relative][1]
+                except KeyError as error:
+                    raise AssertionError(f"candidate tree is missing required file: {relative}") from error
+            return (self.repo / relative).read_bytes()
+
+        if candidate_files is not None:
+            receipt = json.loads(read_candidate_bytes("docs/screenshots/ui-acceptance-receipt.json"))
+        else:
+            receipt = self.ui_receipt
         self.assertEqual("local_candidate_only", receipt["status"])
         self.assertEqual("Playwright Chrome", receipt["capture"]["browser"])
         self.assertRegex(receipt["capture"]["browser_version"], r"^\d+(?:\.\d+){3}$")
@@ -317,11 +416,6 @@ class FrontendContractTest(unittest.TestCase):
             reviewed["hash_algorithm"],
         )
 
-        candidate_digest = hashlib.sha256()
-        output = subprocess.check_output(
-            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
-            cwd=self.repo,
-        )
         expected_exclusions = {
             "docs/screenshots/ui-acceptance-receipt.json",
             "docs/evidence/mature-candidate-receipt.json",
@@ -333,35 +427,70 @@ class FrontendContractTest(unittest.TestCase):
             expected_exclusions,
             set(reviewed["excluded_paths"]),
         )
-        candidate_paths = sorted(
-            item.decode("utf-8")
-            for item in output.split(b"\0")
-            if item and item.decode("utf-8") not in expected_exclusions
+        mature_receipt = json.loads(read_candidate_bytes("docs/evidence/mature-candidate-receipt.json"))
+        assert_release_evidence_bindings(
+            mature_receipt,
+            reviewed,
+            read_candidate_bytes,
+            expected_release_status=(
+                f"{candidate_ref}_release_candidate_pre_push"
+                if candidate_ref.startswith("v")
+                else None
+            ),
         )
-        for relative in candidate_paths:
-            path = self.repo / relative
-            if path.is_symlink():
-                mode = "120000"
-                payload = os.readlink(path).encode("utf-8")
+
+        if enforce_candidate:
+            candidate_digest = hashlib.sha256()
+            entries: list[tuple[str, str, bytes]] = []
+            if candidate_files is not None:
+                entries.extend(
+                    (relative, mode, payload)
+                    for relative, (mode, payload) in candidate_files.items()
+                    if relative not in expected_exclusions
+                )
             else:
-                mode = "100755" if os.access(path, os.X_OK) else "100644"
-                payload = path.read_bytes()
-            candidate_digest.update(mode.encode("ascii"))
-            candidate_digest.update(b"\0")
-            candidate_digest.update(relative.encode("utf-8"))
-            candidate_digest.update(b"\0")
-            candidate_digest.update(str(len(payload)).encode("ascii"))
-            candidate_digest.update(b"\0")
-            candidate_digest.update(payload)
-            candidate_digest.update(b"\0")
-        self.assertEqual(reviewed["file_count"], len(candidate_paths))
-        self.assertEqual(reviewed["sha256"], candidate_digest.hexdigest())
+                output = subprocess.check_output(
+                    ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+                    cwd=self.repo,
+                )
+                for relative in sorted(
+                    item.decode("utf-8")
+                    for item in output.split(b"\0")
+                    if item and item.decode("utf-8") not in expected_exclusions
+                ):
+                    path = self.repo / relative
+                    if path.is_symlink():
+                        mode = "120000"
+                        payload = os.readlink(path).encode("utf-8")
+                    else:
+                        mode = "100755" if os.access(path, os.X_OK) else "100644"
+                        payload = path.read_bytes()
+                    entries.append((relative, mode, payload))
+            for relative, mode, payload in sorted(entries):
+                candidate_digest.update(mode.encode("ascii"))
+                candidate_digest.update(b"\0")
+                candidate_digest.update(relative.encode("utf-8"))
+                candidate_digest.update(b"\0")
+                candidate_digest.update(str(len(payload)).encode("ascii"))
+                candidate_digest.update(b"\0")
+                candidate_digest.update(payload)
+                candidate_digest.update(b"\0")
+            self.assertEqual(reviewed["file_count"], len(entries))
+            self.assertEqual(reviewed["sha256"], candidate_digest.hexdigest())
 
         source_digest = hashlib.sha256()
-        source_files = sorted(path for path in (self.repo / "frontend" / "src").rglob("*") if path.is_file())
-        for path in source_files:
-            relative = path.relative_to(self.repo).as_posix()
-            payload = path.read_bytes()
+        if candidate_files is not None:
+            source_files = sorted(
+                relative for relative in candidate_files if relative.startswith("frontend/src/")
+            )
+        else:
+            source_files = sorted(
+                path.relative_to(self.repo).as_posix()
+                for path in (self.repo / "frontend" / "src").rglob("*")
+                if path.is_file()
+            )
+        for relative in source_files:
+            payload = read_candidate_bytes(relative)
             source_digest.update(relative.encode("utf-8"))
             source_digest.update(b"\0")
             source_digest.update(str(len(payload)).encode("ascii"))
@@ -371,11 +500,18 @@ class FrontendContractTest(unittest.TestCase):
         self.assertEqual(receipt["frontend_source"]["file_count"], len(source_files))
         self.assertEqual(receipt["frontend_source"]["sha256"], source_digest.hexdigest())
 
-        expected_asset_paths = {
-            path.relative_to(self.repo).as_posix()
-            for path in (self.repo / "src" / "video_analysis_mvp" / "frontend_dist").rglob("*")
-            if path.is_file()
-        }
+        if candidate_files is not None:
+            expected_asset_paths = {
+                relative
+                for relative in candidate_files
+                if relative.startswith("src/video_analysis_mvp/frontend_dist/")
+            }
+        else:
+            expected_asset_paths = {
+                path.relative_to(self.repo).as_posix()
+                for path in (self.repo / "src" / "video_analysis_mvp" / "frontend_dist").rglob("*")
+                if path.is_file()
+            }
         expected_screenshots = {
             "docs/screenshots/workspace-desktop-1440x900.png": (1440, 900),
             "docs/screenshots/review-drawer-desktop-1440x900.png": (1440, 900),
@@ -390,16 +526,15 @@ class FrontendContractTest(unittest.TestCase):
         self.assertEqual(set(expected_screenshots), {item["path"] for item in receipt["screenshots"]})
         for item in [*receipt["served_assets"], *receipt["screenshots"]]:
             with self.subTest(path=item["path"]):
-                path = self.repo / item["path"]
-                payload = path.read_bytes()
+                payload = read_candidate_bytes(item["path"])
                 self.assertEqual(item["size_bytes"], len(payload))
                 self.assertEqual(item["sha256"], hashlib.sha256(payload).hexdigest())
 
         for item in receipt["screenshots"]:
-            path = self.repo / item["path"]
-            with self.subTest(verify=item["path"]), Image.open(path) as image:
+            payload = read_candidate_bytes(item["path"])
+            with self.subTest(verify=item["path"]), Image.open(BytesIO(payload)) as image:
                 image.verify()
-            with self.subTest(dimensions=item["path"]), Image.open(path) as image:
+            with self.subTest(dimensions=item["path"]), Image.open(BytesIO(payload)) as image:
                 image.load()
                 self.assertEqual("PNG", image.format)
                 self.assertEqual(expected_screenshots[item["path"]], image.size)
@@ -450,6 +585,57 @@ class FrontendContractTest(unittest.TestCase):
         }
         self.assertEqual(expected_interactions, set(receipt["interaction_checks"]))
         self.assertTrue(all(value is True for value in receipt["interaction_checks"].values()))
+
+    def test_release_evidence_binding_rejects_stale_values(self) -> None:
+        mature = json.loads(
+            (self.repo / "docs" / "evidence" / "mature-candidate-receipt.json").read_text(encoding="utf-8")
+        )
+        reviewed = self.ui_receipt["reviewed_source_candidate"]
+
+        def read_bytes(relative: str) -> bytes:
+            return (self.repo / relative).read_bytes()
+
+        assert_release_evidence_bindings(mature, reviewed, read_bytes)
+
+        stale_candidate = json.loads(json.dumps(mature))
+        stale_candidate["candidate"]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(AssertionError, "candidate sha256"):
+            assert_release_evidence_bindings(stale_candidate, reviewed, read_bytes)
+
+        stale_evidence = json.loads(json.dumps(mature))
+        stale_evidence["evidence_files"][0]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(AssertionError, "evidence digest is stale"):
+            assert_release_evidence_bindings(stale_evidence, reviewed, read_bytes)
+
+        incomplete_evidence = json.loads(json.dumps(mature))
+        incomplete_evidence["evidence_files"].pop()
+        with self.assertRaisesRegex(AssertionError, "evidence paths"):
+            assert_release_evidence_bindings(incomplete_evidence, reviewed, read_bytes)
+
+        missing_schema = json.loads(json.dumps(mature))
+        missing_schema.pop("schema_id")
+        with self.assertRaisesRegex(AssertionError, "schema_id"):
+            assert_release_evidence_bindings(missing_schema, reviewed, read_bytes)
+
+        wrong_status = json.loads(json.dumps(mature))
+        wrong_status["status"] = "v9.9.9_wrong_release"
+        with self.assertRaisesRegex(AssertionError, "release-candidate status"):
+            assert_release_evidence_bindings(wrong_status, reviewed, read_bytes)
+
+        wrong_tag = json.loads(json.dumps(mature))
+        wrong_tag["status"] = "v0.3.0_release_candidate_pre_push"
+        with self.assertRaisesRegex(AssertionError, "release tag"):
+            assert_release_evidence_bindings(
+                wrong_tag,
+                reviewed,
+                read_bytes,
+                expected_release_status="v0.2.0_release_candidate_pre_push",
+            )
+
+        missing_verification = json.loads(json.dumps(mature))
+        missing_verification.pop("verification")
+        with self.assertRaisesRegex(AssertionError, "verification"):
+            assert_release_evidence_bindings(missing_verification, reviewed, read_bytes)
 
 
 if __name__ == "__main__":
