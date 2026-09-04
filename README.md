@@ -412,6 +412,14 @@ commands require the pinned audit tools used by CI (`ruff==0.15.22`,
 synthetic media and removes it on exit. It does not test external model
 providers, password-protected sources, or every codec.
 
+The frontend CI audit fails on confirmed high or critical vulnerabilities and
+on unclassified audit-process errors. If the npm advisory endpoint itself times
+out or returns a service error, CI emits an explicit `npm audit unavailable`
+warning instead of reporting a false vulnerability verdict. That warning is not
+evidence of a clean audit; Dependabot and the separate Python security job remain
+active, and a release receipt may claim a clean npm audit only when the endpoint
+actually returned a result.
+
 ## Architecture and project direction
 
 - [Changelog and release history](CHANGELOG.md)
