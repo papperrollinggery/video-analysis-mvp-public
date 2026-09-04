@@ -15,7 +15,7 @@ substitute for an applicable render, browser, install, or benchmark gate.
 | Real render | `scripts/test-client-exports.sh` with required runtime env | openpyxl, Playwright Chromium, CJK font, searchable A4 PDF, LibreOffice XLSX conversion | every office version or pixel-identical rendering |
 | Install | `scripts/install-smoke-test.sh` | clean Git candidate, fresh temporary venv, wheel/source asset parity, and declared base dependencies | optional render stacks and unsupported platforms |
 | Product benchmark | `analyze-video benchmark --output DIR` | six generated video cases, five deterministic PCM cases, artifact completeness, readiness, performance | ASR WER/CER or semantic VO/music/SFX identity accuracy |
-| Security/resource | CI `security` plus targeted tests | dependency/source audit, request/path/formula/privacy limits, process/disk/cancellation states | hostile executable sandboxing |
+| Security/resource | CI `security` plus targeted tests | dependency/source audit, request/path/formula/privacy limits, process/disk/cancellation states; confirmed high/critical npm findings fail | npm advisory endpoint outages are surfaced as unavailable warnings, not clean-audit claims; hostile executable sandboxing |
 | Candidate freeze | `scripts/verify-candidate-receipt.sh TAG` at release/tag time | immutable screenshots, product digest, mature-candidate receipt, and exact bindings for the UI receipt, readiness report, cold review, and progress record in that Git tree | later development revisions, publication or adoption |
 
 ## Video boundary metrics

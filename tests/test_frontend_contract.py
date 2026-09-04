@@ -359,6 +359,9 @@ class FrontendContractTest(unittest.TestCase):
         self.assertIn('headers: { Origin: siblingOrigin }', self.vite_integration)
         self.assertIn('headers: { Origin: devOrigin }', self.vite_integration)
         self.assertIn("npm run test:integration", self.ci)
+        self.assertIn("node tests/npm-audit-classifier.test.mjs", self.ci)
+        self.assertIn('node ../scripts/classify-npm-audit.mjs "$audit_status"', self.ci)
+        self.assertNotIn("run: npm audit --audit-level=high\n", self.ci)
 
     def test_ui_acceptance_receipt_binds_current_assets_and_screenshots(self) -> None:
         enforce_candidate = os.environ.get("VEW_ENFORCE_CANDIDATE_DIGEST") == "1"

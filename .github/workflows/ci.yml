@@ -162,11 +162,20 @@ jobs:
       - name: Test PDF driver diagnostics
         run: npm run test:pdf-driver
 
+      - name: Test npm audit result classifier
+        run: node tests/npm-audit-classifier.test.mjs
+
       - name: Build
         run: npm run build
 
       - name: Audit frontend dependencies
-        run: npm audit --audit-level=high
+        run: |
+          audit_log="$RUNNER_TEMP/npm-audit-output.txt"
+          set +e
+          npm audit --audit-level=high --json > "$audit_log" 2>&1
+          audit_status=$?
+          set -e
+          node ../scripts/classify-npm-audit.mjs "$audit_status" < "$audit_log"
 
   export-render:
     name: Real XLSX / PDF / browser acceptance
