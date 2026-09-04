@@ -80,7 +80,7 @@ reconnected and publication was explicitly authorized. README badges/status,
 package project URLs, citation metadata, `llms.txt`, security reporting,
 launch/growth wording, changelog and v0.2.0 release notes were updated without a
 runtime-code change. The resulting 204-file product digest is
-`710534cfa4a7449faceba0257c1f525c9aba263a11cbfe38081258888e4bd61c`.
+`a57b7263199f4bad8a8955b8c295d79d24f8d3ed13053ca6b984925b079183fc`.
 Its independent staged review found one P2 contradiction in the deferred list:
 canonical URLs, badges and GitHub release were still labelled deferred after
 being enabled. The minimal wording repair retained only genuinely unavailable
@@ -96,3 +96,22 @@ post-merge main matrix. Its focused independent review was CLEAN: YAML parsed,
 all pull-request synchronization events remain covered, and merge/main pushes
 still run CI. The superseded duplicate runs were sent cancellation requests;
 the exact new PR checks remain mandatory before merge.
+
+The first exact-SHA PR run then found a real high-severity minimum-dependency
+failure: CI pinned `yt-dlp==2026.6.9`, which is affected by
+`CVE-2026-55404` / `GHSA-6v4j-43gg-vj32`; the separately locked local version
+was already `2026.8.19`. The project minimum and minimum-dependency job now use
+the advisory's first patched version, `2026.7.4`, while the lock remains
+`2026.8.19`. Local `uv lock --check` and pip-audit pass; the replacement remote
+checks and an independent security-delta review remain required before merge.
+
+The remaining remote failures were traced independently rather than grouped as
+one flaky run. The frontend job's npm 10 quick-audit endpoint rejected the npm
+11 lock tree after install/build passed; only that job now pins npm 11.12.1.
+The macOS suites exposed `HTTPServer.server_bind()` reverse DNS on loopback; a
+TDD regression first failed, then the minimal server subclass bypassed reverse
+DNS while retaining IPv4, localhost and supported IPv6 `::1` bindings. The
+real-render job had a Bash quoting error before runtime execution; its
+two-step browser path assignment passes `bash -n` and resolves the installed
+Playwright browser locally. Independent review found no P0-P3 in these fixes;
+the next exact-SHA GitHub run remains the publication gate.

@@ -27,6 +27,8 @@ Versioning while its APIs and on-disk schemas remain pre-1.0.
 
 - hardened loopback origin/CSRF checks, file and value-file handling, media-tool
   execution, URL-ingest limits, artifact confinement and spreadsheet safety;
+- raised the minimum `yt-dlp` version to `2026.7.4`, which fixes
+  `CVE-2026-55404` / `GHSA-6v4j-43gg-vj32`;
 - enabled GitHub private vulnerability reporting.
 
 ### Known limitations

@@ -1,11 +1,11 @@
 {
   "schema_id": "vew-mature-candidate-receipt/v1",
   "status": "v0.2.0_release_candidate_pre_push",
-  "recorded_at": "2026-09-04T15:08:04+08:00",
+  "recorded_at": "2026-09-04T15:30:53+08:00",
   "candidate": {
     "scope": "local mature candidate only",
     "file_count": 204,
-    "sha256": "710534cfa4a7449faceba0257c1f525c9aba263a11cbfe38081258888e4bd61c",
+    "sha256": "a57b7263199f4bad8a8955b8c295d79d24f8d3ed13053ca6b984925b079183fc",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -27,7 +27,7 @@
       "id": "python_full",
       "command": ".venv/bin/python -m pytest -q tests",
       "exit_code": 0,
-      "result": "515 passed, 28 skipped, 393 subtests passed in 48.85s"
+      "result": "517 passed, 28 skipped, 393 subtests passed in 50.94s"
     },
     {
       "id": "focused_security_codex_bridge_migration",
@@ -181,23 +181,25 @@
     "overcorrection_delta_review": "CLEAN: no P0-P3 finding and no supported-function regression",
     "final_independent_verdict": "APPROVE WITH RESIDUALS: no P0/P1/P2; accepted P3 screenshot freshness and external URL/provider boundaries",
     "publication_metadata_review": "APPROVE: no P0-P3 after canonical metadata, privacy neutralization, and staged receipt verification",
-    "ci_trigger_delta_review": "CLEAN: PR events remain covered, main push remains covered, feature-branch duplicate matrix removed"
+    "ci_trigger_delta_review": "CLEAN: PR events remain covered, main push remains covered, feature-branch duplicate matrix removed",
+    "remote_minimum_dependency_fix_review": "CLEAN: minimum is first patched 2026.7.4 and lock resolves 2026.8.19",
+    "remote_ci_failure_repair_review": "CLEAN: npm audit pin scope, IPv4/IPv6 no-reverse-DNS server, TDD regression, and real-render shell quoting reviewed with no P0-P3"
   },
   "evidence_files": [
     {
       "path": "docs/screenshots/ui-acceptance-receipt.json",
       "size_bytes": 9552,
-      "sha256": "faf28d6881b95c21d3a233255aca7da787eaa0d779e376621656d9aeed5cb446"
+      "sha256": "fd77638c854db5ef9a5539f6d89f472b3eb8213fae76ffdabdf0ec35c49890af"
     },
     {
       "path": "docs/release-readiness.md",
-      "size_bytes": 9052,
-      "sha256": "65cba644c5b0d608032ab69983c8b999e79a3dc1362f6863b49182913abad2f2"
+      "size_bytes": 9797,
+      "sha256": "d8479027551fa7d2b9a107dc85623324553fcd06ace893b03aa66a1b4d54bd9a"
     },
     {
       "path": "docs/cold-review.md",
-      "size_bytes": 5358,
-      "sha256": "ef802173aac1f1d19f74e6a351e7383b83d87574dd6d07a59d7a37ac6ef6df28"
+      "size_bytes": 6641,
+      "sha256": "60b2482fa481ab1233a1d71fb6059a8374a65f1b9e7013807643f33154381e49"
     },
     {
       "path": "progress.txt",

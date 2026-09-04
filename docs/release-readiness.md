@@ -1,8 +1,9 @@
 # Mature candidate release readiness
 
 Status: all applicable local runtime gates passed and the runtime candidate
-ended **APPROVE WITH RESIDUALS** with no P0/P1/P2 finding. The publication-only
-metadata staged diff also passed independent review with no remaining P0-P3.
+ended **APPROVE WITH RESIDUALS** with no P0/P1/P2 finding. Publication metadata
+and CI-trigger deltas passed independent review. The remote minimum-dependency
+security correction is awaiting its replacement PR checks.
 This document records the local pre-publication verification. GitHub checks,
 the merged revision and release page are the authority for remote publication;
 this receipt does not prove a separate deployment or package-registry upload.
@@ -12,7 +13,7 @@ this receipt does not prove a separate deployment or package-registry upload.
 The current product file set contains **204** non-ignored files and has digest:
 
 ```text
-sha256:710534cfa4a7449faceba0257c1f525c9aba263a11cbfe38081258888e4bd61c
+sha256:a57b7263199f4bad8a8955b8c295d79d24f8d3ed13053ca6b984925b079183fc
 ```
 
 The digest hashes `mode\0path\0size\0bytes\0` in sorted Git-candidate order.
@@ -31,7 +32,7 @@ The mature-candidate receipt separately hashes these evidence files.
 
 | Gate | Current result |
 | --- | --- |
-| Full Python suite | 515 passed, 28 optional-runtime skips, 393 subtests in 48.85 s; exit 0 |
+| Full Python suite | 517 passed, 28 optional-runtime skips, 393 subtests in 50.94 s; exit 0 |
 | Focused security/Codex/BridgeDeck/migration/API regression | 110 passed, 84 subtests in 11.77 s; exit 0 |
 | Ruff 0.15.22 | `src` and `tests` clean |
 | Bandit 1.9.4 | no medium/high findings; the three B314 suppressions are limited to bounded self-generated XLSX post-validation |
@@ -82,6 +83,16 @@ release notes were added.
 The branch, PR, checks, merge commit and tag are recorded by GitHub after this
 local snapshot. They must be inspected before the release is described as
 published.
+
+The first exact-SHA PR run supplied useful red evidence rather than release
+proof. It found four independent CI integration gaps: a vulnerable minimum
+`yt-dlp` pin, npm 10 audit incompatibility with the npm 11 lock tree, macOS
+loopback server startup blocked by reverse DNS, and a Bash quoting error while
+binding the Playwright browser path. The current candidate raises the minimum
+to the first patched `yt-dlp` release, pins npm only in the affected audit job,
+uses an IPv4/IPv6 loopback server that avoids reverse DNS, and uses a
+syntax-checked two-step browser-path assignment. Local targeted tests and
+independent delta review pass; replacement GitHub checks remain mandatory.
 
 ## Security disposition
 

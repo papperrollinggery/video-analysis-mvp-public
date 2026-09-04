@@ -13,6 +13,7 @@ import threading
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from socketserver import TCPServer
 from urllib.parse import parse_qs, quote, unquote, urlparse
 
 from .artifacts import PROFESSIONAL_EXPORT_IDS, artifact_path
@@ -64,6 +65,32 @@ ACTIVE_DOCUMENT_SUFFIXES = {
 }
 MAX_REQUEST_BODY_BYTES = 1024 * 1024
 REQUEST_BODY_TIMEOUT_SECONDS = 10.0
+
+
+class LoopbackThreadingHTTPServer(ThreadingHTTPServer):
+    """Bind the validated loopback address without a reverse-DNS startup dependency."""
+
+    def __init__(
+        self,
+        server_address: tuple[str, int],
+        request_handler_class: type[BaseHTTPRequestHandler],
+        bind_and_activate: bool = True,
+    ) -> None:
+        try:
+            address = ipaddress.ip_address(server_address[0])
+        except ValueError:
+            self.address_family = socket.AF_INET
+        else:
+            self.address_family = (
+                socket.AF_INET6 if address.version == 6 else socket.AF_INET
+            )
+        super().__init__(server_address, request_handler_class, bind_and_activate)
+
+    def server_bind(self) -> None:
+        TCPServer.server_bind(self)
+        host, port = self.server_address[:2]
+        self.server_name = str(host)
+        self.server_port = int(port)
 
 
 def parse_single_byte_range(value: str, file_size: int) -> tuple[int, int] | None:
@@ -751,7 +778,7 @@ def serve(host: str, port: int, workspace: str | None) -> None:
             return not bool(readiness.get("professional_export_allowed"))
 
     print(f"Serving video analysis UI at http://{host}:{port}")
-    ThreadingHTTPServer((host, port), Handler).serve_forever()
+    LoopbackThreadingHTTPServer((host, port), Handler).serve_forever()
 
 
 def csrf_field(token: str) -> str:

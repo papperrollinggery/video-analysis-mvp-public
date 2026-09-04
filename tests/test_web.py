@@ -10,10 +10,13 @@ import tempfile
 import time
 import unittest
 import uuid
+from http.server import BaseHTTPRequestHandler
 from pathlib import Path
+from unittest.mock import patch
 
 from PIL import Image
 
+from video_analysis_mvp import web as web_module
 from video_analysis_mvp.audio import _stage_and_commit_audio_generation
 from video_analysis_mvp.paths import ProjectPaths
 from video_analysis_mvp.schemas import (
@@ -584,6 +587,40 @@ class WebContractTest(unittest.TestCase):
     def test_non_loopback_bind_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
             serve("0.0.0.0", 0, str(self.workspace))
+
+    def test_loopback_server_bind_does_not_depend_on_reverse_dns(self) -> None:
+        server_class = getattr(web_module, "LoopbackThreadingHTTPServer", None)
+        self.assertIsNotNone(server_class)
+        with patch.object(
+            web_module.socket,
+            "getfqdn",
+            side_effect=AssertionError("loopback bind must not perform reverse DNS"),
+        ):
+            server = server_class(("127.0.0.1", 0), BaseHTTPRequestHandler)
+        try:
+            self.assertEqual("127.0.0.1", server.server_name)
+        finally:
+            server.server_close()
+
+    @unittest.skipUnless(socket.has_ipv6, "Python runtime has no IPv6 support")
+    def test_loopback_server_binds_ipv6_when_loopback_is_available(self) -> None:
+        with socket.socket(socket.AF_INET6) as probe:
+            try:
+                probe.bind(("::1", 0))
+            except OSError as exc:
+                self.skipTest(f"IPv6 loopback is unavailable: {exc}")
+
+        try:
+            server = web_module.LoopbackThreadingHTTPServer(
+                ("::1", 0), BaseHTTPRequestHandler
+            )
+        except OSError as exc:
+            self.fail(f"validated IPv6 loopback must bind: {exc}")
+        try:
+            self.assertEqual(socket.AF_INET6, server.address_family)
+            self.assertEqual("::1", server.server_name)
+        finally:
+            server.server_close()
 
     def test_missing_assets_are_not_spa_fallback(self) -> None:
         status, _, body = self._request("/assets/missing.js")
