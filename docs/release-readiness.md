@@ -13,7 +13,7 @@ this receipt does not prove a separate deployment or package-registry upload.
 The current product file set contains **205** non-ignored files and has digest:
 
 ```text
-sha256:f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f
+sha256:9c8e8cbce9a08d6f8b576325587812e495e9c929b92c8cd56e971f7ad9713b97
 ```
 
 The digest hashes `mode\0path\0size\0bytes\0` in sorted Git-candidate order.
@@ -32,7 +32,7 @@ The mature-candidate receipt separately hashes these evidence files.
 
 | Gate | Current result |
 | --- | --- |
-| Full Python suite | 518 passed, 28 optional-runtime skips, 393 subtests in 49.40 s; exit 0 |
+| Full Python suite | 518 passed, 29 optional-runtime skips, 393 subtests in 52.76 s; exit 0 |
 | Focused security/Codex/BridgeDeck/migration/API regression | 110 passed, 84 subtests in 11.77 s; exit 0 |
 | Ruff 0.15.22 | `src` and `tests` clean |
 | Bandit 1.9.4 | no medium/high findings; the three B314 suppressions are limited to bounded self-generated XLSX post-validation |
@@ -40,8 +40,8 @@ The mature-candidate receipt separately hashes these evidence files.
 | Frontend dependency audit | `browserslist` updated 4.28.6 → 4.28.8 after two high-severity advisories; current cache-backed `npm audit --offline --audit-level=high` reports 0 vulnerabilities |
 | Frontend | same-origin integration, TypeScript/Vite build and export-center E2E passed |
 | Browser E2E | generate 2, cancel 1, save 1, delete 1, serialized status reads, 3 px focus, no unexpected console problems |
-| Real client render | 69/69 passed in 75.342 s with openpyxl, Playwright/Chrome, CJK font, pypdf and LibreOffice; a separate real XLSX+PDF transaction completed in 4.403 s and output hashes were recorded |
-| Install/migration | pre-diagnostic 209-file candidate, fresh temporary venv, candidate wheel, installed migrate dry-run/apply, frontend-byte and served-byte parity passed; exact-lock npm install was cache-backed and reported 0 vulnerabilities |
+| Real client render | 71/71 passed in 78.853 s with openpyxl, Playwright/Chrome, CJK font, pypdf and LibreOffice; a current standalone XLSX+PDF transaction completed in 4.376 s with output hashes recorded |
+| Install/migration | current 210-file candidate, fresh temporary venv, candidate wheel, installed migrate dry-run/apply, frontend-byte and served-byte parity passed; exact-lock npm install was cache-backed and reported 0 vulnerabilities |
 | Pipeline smoke | package, persistent demo, synchronous/asynchronous API and full review/Finalize lifecycle passed |
 | Product benchmark | six of six functional and five of five accuracy-gated video cases passed in 5.608 s with 50,921,472-byte Python-process peak RSS; fade/dissolve remains observational |
 | Audio benchmark | five of five generated PCM cases passed in 0.070 s; ASR and semantic audio identity remain `not_run` |
@@ -93,6 +93,14 @@ to the first patched `yt-dlp` release, pins npm only in the affected audit job,
 uses an IPv4/IPv6 loopback server that avoids reverse DNS, and uses a
 syntax-checked two-step browser-path assignment. Local targeted tests and
 independent delta review pass; replacement GitHub checks remain mandatory.
+
+The bounded renderer diagnostic on the next SHA localized the remaining real
+export failure to browser launch after earlier direct PDF renders succeeded.
+The renderer now keeps HTML/raw PDF/config in the original output-adjacent
+same-volume staging while giving Chromium a separate short, mode-0700 system
+temporary HOME/TMPDIR that is removed on every exit path. The change has no
+effect on final atomic publication and passed independent review without a
+P0-P3 finding; the next remote real-render job remains authoritative.
 
 ## Security disposition
 

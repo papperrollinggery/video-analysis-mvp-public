@@ -52,8 +52,8 @@
   },
   "reviewed_source_candidate": {
     "file_count": 205,
-    "sha256": "f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f",
-    "binding_refreshed_at": "2026-09-04T15:50:49+08:00",
+    "sha256": "9c8e8cbce9a08d6f8b576325587812e495e9c929b92c8cd56e971f7ad9713b97",
+    "binding_refreshed_at": "2026-09-04T16:07:34+08:00",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",

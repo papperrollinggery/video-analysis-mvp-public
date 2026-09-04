@@ -130,8 +130,12 @@ def render_client_pdf(
         font_digest = hashlib.sha256(font_bytes).hexdigest()
     rendered, stats = _html_document(dataset, plan, Path(project_root).resolve(), embedded_font=font_bytes)
     generated = datetime.now(UTC).replace(microsecond=0)
-    with tempfile.TemporaryDirectory(prefix=".vew-pdf-", dir=output.parent) as directory:
+    with (
+        tempfile.TemporaryDirectory(prefix=".vew-pdf-", dir=output.parent) as directory,
+        tempfile.TemporaryDirectory(prefix=".vew-browser-") as browser_directory,
+    ):
         staging = Path(directory)
+        browser_staging = Path(browser_directory)
         html_path = staging / "client.html"
         raw_pdf = staging / "browser.pdf"
         config_path = staging / "config.json"
@@ -147,7 +151,12 @@ def render_client_pdf(
             ),
             encoding="utf-8",
         )
-        env = {"PATH": str(node.parent), "NODE_PATH": str(modules), "HOME": str(staging), "TMPDIR": str(staging)}
+        env = {
+            "PATH": str(node.parent),
+            "NODE_PATH": str(modules),
+            "HOME": str(browser_staging),
+            "TMPDIR": str(browser_staging),
+        }
         try:
             process = run_command(
                 [str(node), str(DRIVER_PATH), str(html_path), str(raw_pdf), str(config_path)],

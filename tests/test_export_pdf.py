@@ -26,7 +26,7 @@ from video_analysis_mvp.export_pdf import (
 )
 from video_analysis_mvp.export_xlsx import render_client_xlsx
 from video_analysis_mvp.image_evidence import inspect_image_bytes
-from video_analysis_mvp.utils import ProcessCancelledError
+from video_analysis_mvp.utils import ProcessCancelledError, ToolError
 
 NODE = Path(os.environ.get("VEW_PDF_NODE", "__vew_pdf_node_unavailable__"))
 NODE_MODULES = Path(
@@ -283,6 +283,47 @@ class PdfExportTest(unittest.TestCase):
 
         self.assertEqual(2 * 1024 * 1024, runner.call_args.kwargs["max_output_bytes"])
         self.assertFalse(self.pdf_path().exists())
+
+    @unittest.skipUnless(PDF_RUNTIME and PYPDF_AVAILABLE, "dedicated PDF runtime is unavailable")
+    def test_pdf_browser_runtime_temp_is_private_and_outside_output_tree(self) -> None:
+        observed: dict[str, object] = {}
+
+        def capture_and_fail(*_args, **kwargs):
+            environment = kwargs["environment"]
+            runtime_temp = Path(environment["TMPDIR"])
+            observed.update(
+                {
+                    "home": environment["HOME"],
+                    "tmpdir": environment["TMPDIR"],
+                    "mode": runtime_temp.stat().st_mode & 0o777,
+                }
+            )
+            raise ToolError(
+                "Command failed\n"
+                "RendererDiagnostic:launch-browser:browser-launch-failed:Error"
+            )
+
+        with (
+            patch("video_analysis_mvp.export_pdf.run_command", side_effect=capture_and_fail),
+            self.assertRaisesRegex(PdfExportError, "stage=launch-browser"),
+        ):
+            render_client_pdf(
+                self.dataset,
+                self.pdf_path(),
+                settings=self.settings(),
+                project_root=self.paths.root,
+                available_fonts=["Noto Sans CJK SC"],
+                node_executable=NODE,
+                node_modules_path=NODE_MODULES,
+                browser_executable=CHROME,
+                font_path=FONT,
+            )
+
+        runtime_temp = Path(str(observed["tmpdir"]))
+        self.assertEqual(observed["home"], observed["tmpdir"])
+        self.assertEqual(0o700, observed["mode"])
+        self.assertFalse(runtime_temp.is_relative_to(self.pdf_path().parent))
+        self.assertFalse(runtime_temp.exists())
 
     @unittest.skipUnless(PDF_RUNTIME and PYPDF_AVAILABLE, "dedicated PDF runtime is unavailable")
     def test_pdf_does_not_claim_cancelled_when_group_cleanup_is_unverified(self) -> None:

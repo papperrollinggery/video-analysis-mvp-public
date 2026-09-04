@@ -1,11 +1,11 @@
 {
   "schema_id": "vew-mature-candidate-receipt/v1",
   "status": "v0.2.0_release_candidate_pre_push",
-  "recorded_at": "2026-09-04T15:50:49+08:00",
+  "recorded_at": "2026-09-04T16:07:34+08:00",
   "candidate": {
     "scope": "local mature candidate only",
     "file_count": 205,
-    "sha256": "f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f",
+    "sha256": "9c8e8cbce9a08d6f8b576325587812e495e9c929b92c8cd56e971f7ad9713b97",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -27,7 +27,7 @@
       "id": "python_full",
       "command": ".venv/bin/python -m pytest -q tests",
       "exit_code": 0,
-      "result": "518 passed, 28 skipped, 393 subtests passed in 49.40s"
+      "result": "518 passed, 29 skipped, 393 subtests passed in 52.76s"
     },
     {
       "id": "focused_security_codex_bridge_migration",
@@ -83,26 +83,26 @@
       "command": "env <bundled-python-and-explicit-local-pdf-runtime> scripts/test-client-exports.sh",
       "path_redacted": true,
       "exit_code": 0,
-      "result": "69 tests passed in 75.342s; real XLSX/PDF and LibreOffice openability included"
+      "result": "71 tests passed in 78.853s; bounded diagnostics, private browser-temp cleanup, real XLSX/PDF and LibreOffice openability included"
     },
     {
       "id": "real_both_transaction",
       "command": "temporary ready fixture -> generate_client_export(formats=[xlsx,pdf])",
       "exit_code": 0,
-      "elapsed_seconds": 4.403,
-      "dataset_sha256": "deb71068bf52165e6aafd4933449e3c8c5f33cf12913b3a768ac05759cc18ef7",
+      "elapsed_seconds": 4.376,
+      "dataset_sha256": "dc2e3f90b66e7efd1c930ccc7d19b309904c1fa3677f72df904e3aec35da296d",
       "outputs": {
         "client_breakdown.xlsx": {
-          "size_bytes": 18249,
-          "sha256": "55d5e98c40478d0693d55886606818261553fca6921925af9ee9b32b1e66657b"
+          "size_bytes": 18250,
+          "sha256": "159576556192487dced35536297f8fe2cfb806abbd40261160eb30df3136bf3d"
         },
         "client_breakdown.pdf": {
-          "size_bytes": 162927,
-          "sha256": "e90a474d55a88555eb782c8b3acfa6de32b31a1d236768136fab948bdbfa551a"
+          "size_bytes": 162722,
+          "sha256": "0ddf976ca0f7201a0064b3bd86c8cf61e4a119bb69f81e37a7e0b23e5c25468e"
         },
         "export_receipt.json": {
-          "size_bytes": 1600,
-          "sha256": "b628f19f18995703196206463b095d1669ece09390b803f2fd9d4b93630c4c29"
+          "size_bytes": 1596,
+          "sha256": "cd2a349e0655200797f542040be588a08132a75e89fbe53c6a08ab53afa255a5"
         }
       },
       "cleanup": "Temporary fixture and outputs were removed on context exit."
@@ -112,7 +112,7 @@
       "command": "env npm_config_offline=true PYTHON=<bundled-workspace-python> scripts/install-smoke-test.sh",
       "path_redacted": true,
       "exit_code": 0,
-      "result": "209-file release candidate; fresh build and wheel; installed migrate dry-run/apply; packaged and served frontend byte parity; npm 0 vulnerabilities",
+      "result": "210-file release candidate; fresh build and wheel; installed migrate dry-run/apply; packaged and served frontend byte parity; npm 0 vulnerabilities",
       "boundary": "Frontend package acquisition used the exact lockfile and existing local cache; uncached remote first install was not proven."
     },
     {
@@ -184,23 +184,24 @@
     "ci_trigger_delta_review": "CLEAN: PR events remain covered, main push remains covered, feature-branch duplicate matrix removed",
     "remote_minimum_dependency_fix_review": "CLEAN: minimum is first patched 2026.7.4 and lock resolves 2026.8.19",
     "remote_ci_failure_repair_review": "CLEAN: npm audit pin scope, IPv4/IPv6 no-reverse-DNS server, TDD regression, and real-render shell quoting reviewed with no P0-P3",
-    "remote_real_render_diagnostic_review": "CLEAN: fixed stage/code diagnostic, strict final marker, no raw error message or path, Node and Python regressions passed"
+    "remote_real_render_diagnostic_review": "CLEAN: fixed stage/code diagnostic, strict final marker, no raw error message or path, Node and Python regressions passed",
+    "browser_runtime_temp_fix_review": "CLEAN: private short browser temp is separately cleaned; output-adjacent same-volume staging and atomic publication are unchanged"
   },
   "evidence_files": [
     {
       "path": "docs/screenshots/ui-acceptance-receipt.json",
       "size_bytes": 9552,
-      "sha256": "c72bcb2c1bc3d22ba6d87435d4db4c1aaa4a97f5aee7802b6fc52472d7bc55a3"
+      "sha256": "0260bac19ec46bb2629dbbe91bfb8263e30307bb84be70a0792073f97fd12ba8"
     },
     {
       "path": "docs/release-readiness.md",
-      "size_bytes": 9804,
-      "sha256": "03c519600166de99b226385b189393e79b2fa306744ee1d79ae7399dd148a1d9"
+      "size_bytes": 10326,
+      "sha256": "4aacb9f62a5dbe2bf30ff28766d6adcb96af6e8d0cf6e67a4a075cccac5baba5"
     },
     {
       "path": "docs/cold-review.md",
-      "size_bytes": 7236,
-      "sha256": "45d16a8a2f8d07c13eeca3749c48a0a6e2f031420880f334ce3d53917f60998d"
+      "size_bytes": 7844,
+      "sha256": "10ebef57dbd2f0a2d883abd378072781ae1334feb000f88e6735d0965d00e161"
     },
     {
       "path": "progress.txt",

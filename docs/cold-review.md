@@ -80,7 +80,7 @@ reconnected and publication was explicitly authorized. README badges/status,
 package project URLs, citation metadata, `llms.txt`, security reporting,
 launch/growth wording, changelog and v0.2.0 release notes were updated without a
 runtime-code change. The resulting 204-file product digest is
-`f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f`.
+`9c8e8cbce9a08d6f8b576325587812e495e9c929b92c8cd56e971f7ad9713b97`.
 Its independent staged review found one P2 contradiction in the deferred list:
 canonical URLs, badges and GitHub release were still labelled deferred after
 being enabled. The minimal wording repair retained only genuinely unavailable
@@ -124,3 +124,12 @@ accepts only a complete final marker from fixed stage/code sets and rejects
 path-embedded, oversized or trailing forgeries. Independent review found no
 P0-P3. This diagnostic does not change successful PDF bytes or receipts and is
 used only to make the next remote failure actionable.
+
+That diagnostic reported `launch-browser / browser-launch-failed` only for the
+later service transaction, while earlier direct real PDF tests passed. The
+renderer previously placed Chromium's HOME/TMPDIR inside the deeply nested
+output staging tree. A TDD boundary test first failed, then the renderer moved
+only browser runtime state to a separate short, mode-0700 system temporary
+directory. HTML/raw PDF/config and final publication remain output-adjacent and
+same-volume; both temporary contexts clean up on success, ToolError and
+cancellation. Independent review found no P0-P3 and no over-correction.
