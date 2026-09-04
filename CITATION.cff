@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software in research, please cite the software and the exact revision you used."
+type: software
+title: "Video Evidence Workbench"
+version: 0.2.0
+license: MIT
+date-released: 2026-09-04
+repository-code: "https://github.com/papperrollinggery/video-analysis-mvp-public"
+url: "https://github.com/papperrollinggery/video-analysis-mvp-public"
+# No individual author identity has been supplied; retain the collective label.
+authors:
+  - name: "Video Evidence Workbench contributors"
+keywords:
+  - video analysis
+  - shot detection
+  - video research
+  - provenance
+  - storyboard
+  - human-in-the-loop
+  - video understanding

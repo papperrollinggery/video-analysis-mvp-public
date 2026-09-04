@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .paths import DEFAULT_WORKSPACE, ProjectPaths, project_paths
+from .paths import DEFAULT_WORKSPACE, ProjectPaths, project_paths, resolve_project_root
 from .schemas import (
     AnalysisProfile,
     CanonicalMediaPackage,
@@ -49,7 +49,11 @@ def find_projects(workspace: str | None = None) -> list[ProjectManifest]:
     projects: list[ProjectManifest] = []
     for manifest in sorted(base.glob("*/project_manifest.json"), reverse=True):
         try:
-            projects.append(ProjectManifest.model_validate(load_json(manifest)))
+            project = ProjectManifest.model_validate(load_json(manifest))
+            project_root = resolve_project_root(project.project_id, base)
+            if manifest.resolve() != project_root / "project_manifest.json":
+                continue
+            projects.append(project)
         except Exception:
             continue
     return projects

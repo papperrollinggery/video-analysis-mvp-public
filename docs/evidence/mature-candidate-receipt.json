@@ -1,0 +1,223 @@
+{
+  "schema_id": "vew-mature-candidate-receipt/v1",
+  "status": "v0.2.0_release_candidate_pre_push",
+  "recorded_at": "2026-09-04T16:18:41+08:00",
+  "candidate": {
+    "scope": "local mature candidate only",
+    "file_count": 205,
+    "sha256": "7c9b80fcc8a7167bf51a897a761cc46647cb504259e5e653f8af293bcf29d6c8",
+    "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
+    "excluded_paths": [
+      "docs/cold-review.md",
+      "docs/evidence/mature-candidate-receipt.json",
+      "docs/release-readiness.md",
+      "docs/screenshots/ui-acceptance-receipt.json",
+      "progress.txt"
+    ],
+    "git_identity": {
+      "repository": "https://github.com/papperrollinggery/video-analysis-mvp-public",
+      "repository_verified_at": "2026-09-04",
+      "local_verification_commit": null,
+      "boundary": "This receipt binds the pre-commit local candidate. GitHub records the later branch, merged commit, checks and release tag separately."
+    },
+    "publication_metadata_delta": "Canonical repository metadata, changelog and release notes only; no runtime source change after the approved local candidate."
+  },
+  "verification": [
+    {
+      "id": "python_full",
+      "command": ".venv/bin/python -m pytest -q tests",
+      "exit_code": 0,
+      "result": "518 passed, 29 skipped, 393 subtests passed in 52.76s"
+    },
+    {
+      "id": "focused_security_codex_bridge_migration",
+      "command": ".venv/bin/python -m pytest -q tests/test_bridgedeck_compatibility.py tests/test_codex_analysis.py tests/test_migration.py tests/test_media_security.py tests/test_provider_security.py tests/test_security_boundaries.py tests/test_vision_receipts.py",
+      "exit_code": 0,
+      "result": "110 passed, 84 subtests passed in 11.77s"
+    },
+    {
+      "id": "legacy_compatibility_delta",
+      "command": ".venv/bin/python -m pytest -q tests/test_web.py tests/test_report_generation.py tests/test_workspace_api_persistence.py",
+      "exit_code": 0,
+      "result": "57 passed, 29 subtests passed in 7.36s"
+    },
+    {
+      "id": "ruff",
+      "command": "uvx --offline --from ruff==0.15.22 ruff check src tests",
+      "exit_code": 0,
+      "result": "All checks passed"
+    },
+    {
+      "id": "bandit",
+      "command": "uvx --offline --from bandit==1.9.4 bandit -q -r src -ll",
+      "exit_code": 0,
+      "result": "No medium or high finding"
+    },
+    {
+      "id": "python_dependency_audit",
+      "command": "uvx --offline --from pip-audit==2.10.1 pip-audit --path <current-venv-site-packages> --skip-editable --progress-spinner off",
+      "path_redacted": true,
+      "exit_code": 0,
+      "result": "No known vulnerabilities found"
+    },
+    {
+      "id": "frontend_dependency_audit",
+      "command": "npm --prefix frontend audit --audit-level=high --offline",
+      "exit_code": 0,
+      "result": "found 0 vulnerabilities",
+      "boundary": "Cache-backed advisory data; the exact lockfile was current."
+    },
+    {
+      "id": "frontend",
+      "commands": [
+        "npm --prefix frontend run build",
+        "npm --prefix frontend run test:integration",
+        "npm --prefix frontend run test:e2e",
+        "scripts/verify-frontend-assets.sh frontend/dist src/video_analysis_mvp/frontend_dist"
+      ],
+      "exit_code": 0,
+      "result": "1703 modules; 4 packaged files match; generate 2, cancel 1, save 1, delete 1; 1440/900/390 no overflow or small targets; 3px focus; no unexpected console problem"
+    },
+    {
+      "id": "real_client_render_matrix",
+      "command": "env <bundled-python-and-explicit-local-pdf-runtime> scripts/test-client-exports.sh",
+      "path_redacted": true,
+      "exit_code": 0,
+      "result": "71 tests passed in 78.853s; bounded diagnostics, private browser-temp cleanup, real XLSX/PDF and LibreOffice openability included"
+    },
+    {
+      "id": "real_both_transaction",
+      "command": "temporary ready fixture -> generate_client_export(formats=[xlsx,pdf])",
+      "exit_code": 0,
+      "elapsed_seconds": 4.376,
+      "dataset_sha256": "dc2e3f90b66e7efd1c930ccc7d19b309904c1fa3677f72df904e3aec35da296d",
+      "outputs": {
+        "client_breakdown.xlsx": {
+          "size_bytes": 18250,
+          "sha256": "159576556192487dced35536297f8fe2cfb806abbd40261160eb30df3136bf3d"
+        },
+        "client_breakdown.pdf": {
+          "size_bytes": 162722,
+          "sha256": "0ddf976ca0f7201a0064b3bd86c8cf61e4a119bb69f81e37a7e0b23e5c25468e"
+        },
+        "export_receipt.json": {
+          "size_bytes": 1596,
+          "sha256": "cd2a349e0655200797f542040be588a08132a75e89fbe53c6a08ab53afa255a5"
+        }
+      },
+      "cleanup": "Temporary fixture and outputs were removed on context exit."
+    },
+    {
+      "id": "clean_install_and_migration",
+      "command": "env npm_config_offline=true PYTHON=<bundled-workspace-python> scripts/install-smoke-test.sh",
+      "path_redacted": true,
+      "exit_code": 0,
+      "result": "210-file release candidate; fresh build and wheel; installed migrate dry-run/apply; packaged and served frontend byte parity; npm 0 vulnerabilities",
+      "boundary": "Frontend package acquisition used the exact lockfile and existing local cache; uncached remote first install was not proven."
+    },
+    {
+      "id": "pipeline_smokes",
+      "commands": [
+        "scripts/smoke-test.sh",
+        "scripts/demo-smoke-test.sh",
+        "sh scripts/api-smoke-test.sh",
+        "scripts/review-workflow-smoke-test.sh"
+      ],
+      "exit_code": 0,
+      "result": "package, real synthetic demo, synchronous/persistent API and blocked-review-finalize-stale-refinalize lifecycle passed"
+    },
+    {
+      "id": "product_benchmark",
+      "command": "run_synthetic_benchmark(<temporary-directory>)",
+      "exit_code": 0,
+      "result": "6/6 functional video, 5/5 accuracy-gated, one fade observational; elapsed 5.608s; Python-process peak RSS 50921472 bytes"
+    },
+    {
+      "id": "audio_benchmark",
+      "command": "scripts/benchmark-audio.sh",
+      "exit_code": 0,
+      "result": "5/5 generated PCM cases in 0.070s; ASR and semantic identity accuracy not_run"
+    },
+    {
+      "id": "documentation_metadata",
+      "commands": [
+        "bounded local Markdown file-link resolver",
+        "Python json/tomllib parser over the Git candidate",
+        "Ruby YAML.safe_load over YAML/CFF candidate files"
+      ],
+      "exit_code": 0,
+      "result": "77 local Markdown file links resolve; 14 JSON, one TOML and six YAML/CFF files parse"
+    },
+    {
+      "id": "artifact_cleanup",
+      "command": "scripts/audit-test-artifacts.sh",
+      "exit_code": 0,
+      "result": "210 candidate files including evidence files; one bounded ignored diagnostic; no candidate media/model/client document"
+    }
+  ],
+  "runtime": {
+    "real_export_python": "3.12.14",
+    "benchmark_python": "3.13.13",
+    "platform": "macOS 26.6.2 arm64",
+    "browser": "Google Chrome via Playwright",
+    "ui_browser_version": "152.0.7977.65",
+    "pdf_font": "Noto Sans CJK SC",
+    "pdf_font_sha256": "2b1304a1a2d6b811a38c2c90a2be503cbac0bfbf4d8b0e6a6a598146564a61ad",
+    "office_check": "LibreOffice headless XLSX-to-PDF"
+  },
+  "security": {
+    "standard_scan_id": "bfb9a48c-8668-4a1d-a7ca-cfc4f69bb1d1",
+    "baseline_snapshot": "codex-security-snapshot/v1:sha256:4a2657ea5d232e775280b79501279d442501eb7fa71603c82040a6ca47637519",
+    "baseline_findings": {
+      "medium": 3,
+      "low": 2
+    },
+    "post_fix_state": "Targeted regressions and independent delta review passed; the scan ID remains the pre-remediation discovery baseline, not a fresh final snapshot.",
+    "tac_access": "unverified: USER_NOT_LOGGED_IN"
+  },
+  "review": {
+    "initial_final_candidate_verdict": "REJECT: one P1 legacy mutation/finalization bypass",
+    "repair": "Legacy shot/vision evidence made read-only; retired POST routes return 410; explicit Finalize shares the readiness service; ads keeper compatibility constrained server-side.",
+    "overcorrection_delta_review": "CLEAN: no P0-P3 finding and no supported-function regression",
+    "final_independent_verdict": "APPROVE WITH RESIDUALS: no P0/P1/P2; accepted P3 screenshot freshness and external URL/provider boundaries",
+    "publication_metadata_review": "APPROVE: no P0-P3 after canonical metadata, privacy neutralization, and staged receipt verification",
+    "ci_trigger_delta_review": "CLEAN: PR events remain covered, main push remains covered, feature-branch duplicate matrix removed",
+    "remote_minimum_dependency_fix_review": "CLEAN: minimum is first patched 2026.7.4 and lock resolves 2026.8.19",
+    "remote_ci_failure_repair_review": "CLEAN: npm audit pin scope, IPv4/IPv6 no-reverse-DNS server, TDD regression, and real-render shell quoting reviewed with no P0-P3",
+    "remote_real_render_diagnostic_review": "CLEAN: fixed stage/code diagnostic, strict final marker, no raw error message or path, Node and Python regressions passed",
+    "browser_runtime_temp_fix_review": "CLEAN: private short browser temp is separately cleaned; output-adjacent same-volume staging and atomic publication are unchanged",
+    "frontend_pure_driver_import_review": "CLEAN: optional Playwright load moved inside executable main; pure diagnostics import without browser dependency or raw stack disclosure"
+  },
+  "evidence_files": [
+    {
+      "path": "docs/screenshots/ui-acceptance-receipt.json",
+      "size_bytes": 9552,
+      "sha256": "fc33e5ec569e101e274c9c5ae072d0aeb6cf7104c30fab27f4fa846e794408cf"
+    },
+    {
+      "path": "docs/release-readiness.md",
+      "size_bytes": 10930,
+      "sha256": "d9fe8066cd7ccfffbc457fb5792ad96dc2f68d6dac4c4e9d3c75823fe3a8c133"
+    },
+    {
+      "path": "docs/cold-review.md",
+      "size_bytes": 8365,
+      "sha256": "914478147f7411fa21a7ed1f7be81d1dbec2bbb127b28346d151050e42e8ac5c"
+    },
+    {
+      "path": "progress.txt",
+      "size_bytes": 25097,
+      "sha256": "b5b8656b6b47de860b016590bd1338cd1fd4d15e915865a44d6790b99b2a2852"
+    }
+  ],
+  "known_limits": [
+    "Trusted-operator URL ingest is not an SSRF sandbox because downloader redirects and later DNS resolution remain external boundaries.",
+    "Provider and BridgeDeck reads do not have a separate monotonic total-response deadline.",
+    "Live OpenAI, MiniMax and BridgeDeck inference is unverified; current Codex smoke records model identity as unverified and requires human review.",
+    "ASR accuracy and semantic VO/music/SFX identity accuracy are not_run.",
+    "Windows, remote CI for a specific revision, release state and adoption are outside this local receipt and must be read from GitHub.",
+    "DeepSeek Harness was not used and is not a project gate."
+  ],
+  "self_hash": null,
+  "self_hash_note": "This receipt cannot hash itself. Its evidence-file hashes are verified independently after final review updates."
+}

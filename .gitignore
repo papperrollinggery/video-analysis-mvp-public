@@ -1,13 +1,31 @@
 __pycache__/
 *.pyc
+.pytest_cache/
+.coverage
+htmlcov/
 .venv/
+.env
+.env.*
+!.env.example
 .DS_Store
 analysis-projects/
-dist/
-*.egg-info/
-.env
-*.log
+demo-workspace/
 tmp/
-runtime_config.json
-*_api_key*
-*_secret*
+dist/
+build/
+output/
+test-results/
+.playwright-cli/
+*.egg-info/
+# Unlicensed, unreferenced exploratory screenshots retained only in this workspace.
+docs/ui-reference/
+# Only the current Vite assets referenced by frontend_dist/index.html are release candidates.
+src/video_analysis_mvp/frontend_dist/assets/*
+!src/video_analysis_mvp/frontend_dist/assets/*.js
+!src/video_analysis_mvp/frontend_dist/assets/*.css
+.gstack/
+.gitnexus
+.agents/skills/gitnexus/
+.claude/skills/gitnexus/
+# Local agency execution plans may contain private task prompts and are never release assets.
+.agency/

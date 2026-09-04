@@ -1,0 +1,281 @@
+{
+  "schema_version": "1.2",
+  "receipt_type": "vew_ui_acceptance",
+  "status": "local_candidate_only",
+  "captured_at": "2026-09-01T18:11:33+08:00",
+  "capture": {
+    "browser": "Playwright Chrome",
+    "browser_version": "152.0.7977.65",
+    "origin": "http://127.0.0.1:8793",
+    "path": "/projects/review-workflow-final",
+    "transport": "loopback HTTP",
+    "fixture": {
+      "generator": "scripts/run-demo.sh",
+      "project_id": "review-workflow-final",
+      "analysis_profile": "research",
+      "source_type": "generated-synthetic-video",
+      "duration_seconds": 4.0,
+      "low_confidence_boundary_count": 1,
+      "audio_review_count": 1,
+      "initial_readiness": "blocked",
+      "final_readiness": "ready",
+      "client_export": {
+        "formats": [
+          "xlsx"
+        ],
+        "lifecycle_state": "current",
+        "generated_by_explicit_request": true
+      },
+      "vision_provider_run": false
+    }
+  },
+  "run_lifecycle_capture": {
+    "browser": "Playwright Chrome",
+    "browser_version": "152.0.7977.65",
+    "origin": "http://127.0.0.1:8793",
+    "path": "/runs/2c4bcaaa-3b8c-4edb-8e09-460d80995d3d",
+    "transport": "loopback HTTP",
+    "fixture": {
+      "generator": "POST /api/runs with the synthetic demo master",
+      "case": "run-capture-final",
+      "source_type": "generated-synthetic-video",
+      "vision_provider_run": false
+    },
+    "result": {
+      "state": "completed",
+      "attempt": 1,
+      "progress": 100,
+      "stage_count": 5,
+      "direct_reload_recovered": true,
+      "workspace_link_present": true
+    }
+  },
+  "reviewed_source_candidate": {
+    "file_count": 205,
+    "sha256": "7c9b80fcc8a7167bf51a897a761cc46647cb504259e5e653f8af293bcf29d6c8",
+    "binding_refreshed_at": "2026-09-04T16:18:41+08:00",
+    "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
+    "excluded_paths": [
+      "docs/cold-review.md",
+      "docs/evidence/mature-candidate-receipt.json",
+      "docs/release-readiness.md",
+      "docs/screenshots/ui-acceptance-receipt.json",
+      "progress.txt"
+    ],
+    "scope_note": "Execution evidence files are excluded to avoid self-reference and are hashed separately by the mature-candidate receipt. Tracked and non-ignored untracked product files, tests, public docs, generated frontend assets, and all six screenshots are included."
+  },
+  "frontend_source": {
+    "tree_path": "frontend/src",
+    "file_count": 10,
+    "sha256": "acea28a5fe51a2b4e8148b03bb2dfd0130856e67a04044983931b29ca18fd7d6",
+    "hash_algorithm": "sha256(path\\0size\\0bytes\\0 for each sorted regular file)"
+  },
+  "served_assets": [
+    {
+      "path": "src/video_analysis_mvp/frontend_dist/assets/index-Ci6ymB2e.js",
+      "size_bytes": 322005,
+      "sha256": "5eba217323bc84e5ace72148274729d3464cb3c8d5192c694146f2dd3b441cc1"
+    },
+    {
+      "path": "src/video_analysis_mvp/frontend_dist/assets/index-D9GrsgeO.css",
+      "size_bytes": 50140,
+      "sha256": "a357f8b7faa21303efb4bebd6d5d7862e76528a3be5bdc614ea55245114fe305"
+    },
+    {
+      "path": "src/video_analysis_mvp/frontend_dist/favicon.svg",
+      "size_bytes": 322,
+      "sha256": "b30e78752cfcb9eadf53159a4423ff3c13ce09e1bc548605d2b03e942a6f7663"
+    },
+    {
+      "path": "src/video_analysis_mvp/frontend_dist/index.html",
+      "size_bytes": 964,
+      "sha256": "9efffde08be8ff47b0272450724f4f39e67e9db719ec875699fea0c3c1b4195a"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/screenshots/workspace-desktop-1440x900.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "size_bytes": 281314,
+      "sha256": "45867f412445ae776ab28e8928c42b5914ed36e27ceb8425ad474c57da4415c4",
+      "mode": "desktop finalized workspace"
+    },
+    {
+      "path": "docs/screenshots/review-drawer-desktop-1440x900.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "size_bytes": 252150,
+      "sha256": "ff823a6a623e2b7883d4fc7ca76de9ac842ecee87f8c209577df7448106307af",
+      "mode": "desktop human-review drawer"
+    },
+    {
+      "path": "docs/screenshots/workspace-tablet-900x1000.png",
+      "viewport": {
+        "width": 900,
+        "height": 1000
+      },
+      "size_bytes": 157113,
+      "sha256": "86734c4278a47a3256c83badccc79e87004d1f7654ec09a1c63b1abdb31447a2",
+      "mode": "tablet finalized workspace"
+    },
+    {
+      "path": "docs/screenshots/mobile-export-390x844.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "size_bytes": 44707,
+      "sha256": "deda8837767a8e1ece29dec75a46b0f9f070f3a9ced8bfbc6f2b04e4c5a85faf",
+      "mode": "mobile current XLSX export center"
+    },
+    {
+      "path": "docs/screenshots/run-complete-desktop-1440x900.png",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "size_bytes": 86984,
+      "sha256": "9bad382487d77bae8f1f564db920359dbd7eb40f67c3ec2173bd9f298f70e6ba",
+      "mode": "desktop persistent run completion"
+    },
+    {
+      "path": "docs/screenshots/run-complete-mobile-390x844.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "size_bytes": 61188,
+      "sha256": "d906355ed38935278a28f8143cedc991d672d7119d2a22e3daeb36761dfe4935",
+      "mode": "mobile persistent run completion"
+    }
+  ],
+  "run_viewport_checks": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "http_status": 200,
+      "console_warnings_or_errors": 0,
+      "page_errors": 0,
+      "document_client_width": 1440,
+      "document_scroll_width": 1440,
+      "visible_controls_below_44px": 0,
+      "horizontal_out_of_view_elements": 0
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "http_status": 200,
+      "console_warnings_or_errors": 0,
+      "page_errors": 0,
+      "document_client_width": 390,
+      "document_scroll_width": 390,
+      "visible_controls_below_44px": 0,
+      "horizontal_out_of_view_elements": 0
+    }
+  ],
+  "viewport_checks": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "http_status": 200,
+      "console_warnings_or_errors": 0,
+      "page_errors": 0,
+      "document_client_width": 1440,
+      "document_scroll_width": 1440,
+      "visible_controls_below_44px": 0,
+      "horizontal_out_of_view_elements": 0,
+      "player": true,
+      "shot_strip": true,
+      "inspector": true,
+      "audio_review": true,
+      "readiness": true
+    },
+    {
+      "name": "tablet",
+      "width": 900,
+      "height": 1000,
+      "http_status": 200,
+      "console_warnings_or_errors": 0,
+      "page_errors": 0,
+      "document_client_width": 900,
+      "document_scroll_width": 900,
+      "visible_controls_below_44px": 0,
+      "horizontal_out_of_view_elements": 0,
+      "player": true,
+      "inspector": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "http_status": 200,
+      "console_warnings_or_errors": 0,
+      "page_errors": 0,
+      "document_client_width": 390,
+      "document_scroll_width": 390,
+      "visible_controls_below_44px": 0,
+      "horizontal_out_of_view_elements": 0,
+      "modes": [
+        "video",
+        "shots",
+        "audio",
+        "evidence",
+        "export"
+      ]
+    }
+  ],
+  "interaction_checks": {
+    "initial_blocked_state_visible": true,
+    "review_drawer_opened": true,
+    "review_drawer_focus_restored": true,
+    "all_shots_human_reviewed": true,
+    "low_confidence_boundary_review_bound": true,
+    "save_without_finalize_blocked": true,
+    "explicit_finalize_ready": true,
+    "professional_artifact_opened": true,
+    "mutation_after_finalize_blocked": true,
+    "byte_identical_restore_still_requires_finalize": true,
+    "second_finalize_ready": true,
+    "source_drawer_opened": true,
+    "source_drawer_focus_restored_after_two_animation_frames": true,
+    "codex_drawer_opened": true,
+    "codex_drawer_focus_restored": true,
+    "mobile_codex_drawer_focus_restored": true,
+    "available_state_visible": true,
+    "blocked_state_visible": true,
+    "missing_or_unavailable_state_visible": true,
+    "unverified_state_visible": true,
+    "codex_boundary_states_no_embedded_or_launched_codex": true,
+    "persistent_run_created_before_analysis_completed": true,
+    "run_page_survived_direct_reload": true,
+    "completed_run_exposed_stage_timings": true,
+    "completed_run_opened_workspace": true
+  },
+  "workflow_smoke": {
+    "script": "scripts/review-workflow-smoke-test.sh",
+    "result": "blocked -> shot/audio reviewed -> finalized ready -> mutation blocked -> exact restore blocked -> refinalized ready"
+  },
+  "capture_method": {
+    "browser_driver": "playwright-cli",
+    "session_count": 1,
+    "services": 1,
+    "screenshots_written_directly": true,
+    "trace_persisted": false,
+    "temporary_workspace_cleaned": true,
+    "browser_and_server_stopped": true
+  },
+  "limitations": [
+    "This receipt records one local synthetic-project review and one persistent run; it is not a public release attestation.",
+    "The full lifecycle is reproducibly covered by scripts/review-workflow-smoke-test.sh; the visual capture itself started from the finalized synthetic fixture and did not persist a Playwright trace.",
+    "The current screenshot shows a real requested XLSX package. Real PDF rendering is covered by a separate optional-runtime gate, not this screenshot.",
+    "It does not validate live providers, Windows, every codec, remote CI, factual model output, or public adoption."
+  ]
+}

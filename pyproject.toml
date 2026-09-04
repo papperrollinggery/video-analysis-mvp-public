@@ -1,25 +1,71 @@
 [project]
 name = "video-analysis-mvp"
-version = "0.1.0"
-description = "Local-first video analysis MVP for shot, audio, rhythm, and report generation."
+version = "0.2.0"
+description = "Local-first, auditable shot-level video research workbench."
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
-dependencies = [
-  "pydantic>=2.0",
+keywords = [
+  "video-analysis",
+  "shot-detection",
+  "storyboard",
+  "video-research",
+  "video-understanding",
+  "provenance",
 ]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Video",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+  "Pillow>=12.3.0",
+  "pydantic>=2.9.0",
+  "yt-dlp>=2026.7.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/papperrollinggery/video-analysis-mvp-public"
+Repository = "https://github.com/papperrollinggery/video-analysis-mvp-public"
+Documentation = "https://github.com/papperrollinggery/video-analysis-mvp-public#readme"
+Issues = "https://github.com/papperrollinggery/video-analysis-mvp-public/issues"
+Changelog = "https://github.com/papperrollinggery/video-analysis-mvp-public/releases"
 
 [project.optional-dependencies]
 api = [
-  "fastapi>=0.110",
-  "uvicorn>=0.27",
-  "python-multipart>=0.0.9",
+  "fastapi>=0.139.0",
+  "starlette>=1.3.1",
+  "uvicorn>=0.51.0",
+  "python-multipart>=0.0.31",
+]
+export = [
+  "openpyxl>=3.1.5,<4",
+]
+pdf = [
+  "pypdf>=6,<7",
 ]
 
 [project.scripts]
 analyze-video = "video_analysis_mvp.cli:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+video_analysis_mvp = [
+  "frontend_dist/index.html",
+  "frontend_dist/favicon.svg",
+  "frontend_dist/assets/*",
+  "templates/client/*.json",
+  "templates/client/*.cjs",
+  "templates/client/assets/*",
+]

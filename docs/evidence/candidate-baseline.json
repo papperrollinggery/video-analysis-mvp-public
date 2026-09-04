@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "status": "execution_baseline_not_release_candidate",
+  "generated_at": "2026-07-22T11:39:28Z",
+  "project": "video-analysis-mvp",
+  "task_id": "vew-mature-product-audio-client-exports-2026-07-22",
+  "work_item": "T00",
+  "git": {
+    "branch": "codex/professional-shot-breakdown-workbench",
+    "head": null,
+    "head_status": "missing",
+    "remotes": [],
+    "candidate_source": "git ls-files --cached --others --exclude-standard -z"
+  },
+  "candidate": {
+    "file_count": 117,
+    "total_bytes": 5140772,
+    "candidate_sha256": "66bc7bb3ad7b5e5177e5ccb4020ede86a72bfe1386bfad8b4fc23c9b84d4368a",
+    "path_set_sha256": "14193028a4624f04a31c9c41c02b21dfaab9bb7374a68876e77422a5f668e314",
+    "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted candidate order)",
+    "path_set_hash_algorithm": "sha256(path\\0 for each UTF-8 path in sorted candidate order)",
+    "excluded_after_git_filter": [
+      ".agency/**",
+      "docs/evidence/candidate-baseline.json"
+    ]
+  },
+  "toolchain": {
+    "python_system": "3.14.5",
+    "node": "v26.0.0",
+    "npm": "11.12.1",
+    "ffmpeg": "8.1.1",
+    "ffprobe": "8.1.1",
+    "wkhtmltopdf": "not_installed",
+    "pytest_runner": "/opt/homebrew/bin/pytest 9.0.3 with PYTHONPATH=src"
+  },
+  "verification": [
+    {
+      "command": "cd frontend && npm run build",
+      "status": "pass",
+      "summary": "Vite production build completed; 1699 modules transformed"
+    },
+    {
+      "command": "cd frontend && npm run test:integration",
+      "status": "pass",
+      "summary": "Vite proxy origin integration passed"
+    },
+    {
+      "command": "sh scripts/verify-frontend-assets.sh frontend/dist src/video_analysis_mvp/frontend_dist",
+      "status": "pass",
+      "summary": "four packaged frontend files match"
+    },
+    {
+      "command": "sh scripts/smoke-test.sh",
+      "status": "pass",
+      "summary": "synthetic delivery package generated"
+    },
+    {
+      "command": "sh scripts/api-smoke-test.sh",
+      "status": "pass",
+      "summary": "synchronous intake and persistent run completed"
+    },
+    {
+      "command": "PYTHONPATH=src /opt/homebrew/bin/pytest -q",
+      "status": "fail",
+      "summary": "247 passed, 8 skipped, 1 failed; UI acceptance receipt candidate file count is stale"
+    }
+  ],
+  "privacy_boundary": {
+    "ignored_runtime_roots": [
+      "analysis-projects/",
+      "demo-workspace/",
+      "output/",
+      "test-results/",
+      "tmp/",
+      "frontend/dist/"
+    ],
+    "private_reference_media": "outside_repository_local_acceptance_only",
+    "bounded_secret_scan": "one synthetic masking fixture match; no live credential identified",
+    "comprehensive_secret_audit": false
+  },
+  "release_claims": {
+    "commit_bound": false,
+    "remote_ci_verified": false,
+    "published": false,
+    "cross_platform_verified": false,
+    "mature_product_candidate": false
+  }
+}

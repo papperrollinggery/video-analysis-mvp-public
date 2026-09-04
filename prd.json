@@ -1,0 +1,208 @@
+{
+  "name": "Video Evidence Workbench",
+  "source": "docs/product-strategy.md",
+  "north_star": "Turn a video into a human-reviewable shot dataset and provenance-backed evidence package on the user's machine.",
+  "growth_goal": {
+    "target": "Build the product and adoption foundation for a possible 2000 GitHub stars.",
+    "commitment": false,
+    "measurement": [
+      "fresh-install success rate",
+      "time to first evidence package",
+      "repeat project creation",
+      "external issues and pull requests",
+      "third-party tutorials and citations",
+      "qualified repository visitor to star conversion"
+    ]
+  },
+  "stories": [
+    {
+      "id": "VEW-001",
+      "title": "Real project data is never replaced by plausible demo content",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "API, timeout, and schema failures are visible and retryable",
+        "The workspace shows its backend data source",
+        "Shot count, timecodes, frames, readiness, and deliverables match project files"
+      ]
+    },
+    {
+      "id": "VEW-002",
+      "title": "One local command serves the production React workspace and API",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "The built frontend is served from the same localhost origin as the API",
+        "SPA routes, static assets, API routes, and project files remain isolated",
+        "Legacy HTML remains an explicit fallback when no frontend build exists"
+      ]
+    },
+    {
+      "id": "VEW-003",
+      "title": "Every project exports an evidence-first Codex companion package",
+      "priority": 3,
+      "passes": true,
+      "acceptanceCriteria": [
+        "reports/codex_handoff.md is deterministic and contains no private absolute path",
+        "data/visualization_dataset.json cites shot IDs, timecodes, and evidence references",
+        "The files explicitly mark unverified items and do not claim that Codex or visualization ran"
+      ]
+    },
+    {
+      "id": "VEW-004",
+      "title": "Desktop and mobile review surfaces expose the same evidence truth",
+      "priority": 4,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Desktop centers the player, shot strip, inspector, evidence table, and readiness",
+        "Mobile uses Video, Shots, Evidence, and Export modes instead of stacked desktop panels",
+        "Controls are keyboard-visible, touch targets are at least 44px, and the page does not overflow horizontally"
+      ]
+    },
+    {
+      "id": "VEW-005",
+      "title": "The repository has an honest open-source release surface",
+      "priority": 5,
+      "passes": true,
+      "acceptanceCriteria": [
+        "README, MIT license, contribution, security, conduct, citation, issue, PR, and CI files exist",
+        "Product language contains no internal pricing, simulated payment, or fake provider success claim",
+        "SEO and GEO assets explain the product with stable Markdown, FAQ, and llms.txt"
+      ]
+    },
+    {
+      "id": "VEW-006",
+      "title": "Fresh install works on macOS, Linux, and Windows or declares an exact support boundary",
+      "priority": 6,
+      "passes": false,
+      "acceptanceCriteria": [
+        "A clean environment installs without relying on the maintainer's existing tools",
+        "One licensed or synthetic sample reaches the same normalized output on supported platforms",
+        "Unsupported codecs and optional tools fail with actionable messages"
+      ]
+    },
+    {
+      "id": "VEW-007",
+      "title": "A reproducible 20-video evaluation reports boundary and package quality",
+      "priority": 7,
+      "passes": false,
+      "acceptanceCriteria": [
+        "The fixture set covers fast cuts, fades, animation, vertical video, VFR, and speech-heavy clips",
+        "The benchmark publishes timing, boundary error, missing evidence, and readiness outcomes",
+        "Results do not use GitHub stars as a quality metric"
+      ]
+    },
+    {
+      "id": "VEW-008",
+      "title": "External vision adapters have live contract tests and cost/privacy documentation",
+      "priority": 8,
+      "passes": false,
+      "acceptanceCriteria": [
+        "OpenAI and MiniMax requests are verified against current provider APIs",
+        "Provider errors propagate to pipeline status",
+        "Frame upload, retention, cost, and regional boundaries are documented"
+      ]
+    },
+    {
+      "id": "VEW-009",
+      "title": "Public adoption funnel is measured after a canonical GitHub repository exists",
+      "priority": 9,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Canonical URL, topics, social preview, releases, and package links are configured",
+        "Install-to-first-artifact telemetry is opt-in or measured through public reproducibility reports",
+        "The 2000-star target is tracked as a scenario, never promised as an outcome"
+      ]
+    },
+    {
+      "id": "VEW-010",
+      "title": "A one-command synthetic demo produces a persistent evidence package",
+      "priority": 6,
+      "passes": true,
+      "acceptanceCriteria": [
+        "scripts/run-demo.sh generates a four-second local video and runs the real pipeline without ASR, external vision, or network downloads",
+        "Each run creates a new ignored workspace project, refuses collisions, and prints the key artifact paths",
+        "CI validates the reported manifest, blocked readiness, demo-receipt/v1, and non-empty evidence artifacts"
+      ]
+    },
+    {
+      "id": "VEW-011",
+      "title": "The primary workspace closes the full human review and package finalization loop",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Every shot is reachable and editable in React, including the twenty-fifth and later shots",
+        "Low-confidence boundaries require a separate operator assertion bound to the current visual generation",
+        "Shot saves are optimistic and recoverable while one explicit finalization commits a fresh package",
+        "A browser acceptance receipt proves blocked to ready to mutation-blocked behavior"
+      ]
+    },
+    {
+      "id": "VEW-012",
+      "title": "Long local analysis has a durable and recoverable lifecycle",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Every UI-started analysis returns a persistent UUID before expensive work begins",
+        "Queued, running, cancelling, completed, failed, cancelled, and interrupted states expose stage timing and bounded diagnostics",
+        "Retry verifies completed media, visual, audio, and report receipts before resuming",
+        "A project-level lease and ownership claim prevent cross-run source, profile, or generation mixing",
+        "A completed run binds final media, visual, audio, and report generations",
+        "Passwords and external provider credentials are excluded from run records"
+      ]
+    },
+    {
+      "id": "VEW-013",
+      "title": "A six-case synthetic benchmark emits an auditable quality receipt",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "Generated cases cover hard cuts, fade or dissolve, animation, vertical video, variable frame rate, and an audio-dense speech surrogate",
+        "The JSON receipt reports stage timing, boundary metrics, artifacts, readiness, environment, and explicit non-goals",
+        "Five declared quality cases pass explicit precision, recall, or false-positive gates while fade or dissolve remains observational",
+        "CI runs the benchmark without network, paid providers, or copyrighted source media",
+        "Observed fade or dissolve weakness remains visible and is not presented as a passed accuracy threshold"
+      ]
+    },
+    {
+      "id": "VEW-014",
+      "title": "Every project produces a provenance-aware audio timeline",
+      "priority": 1,
+      "passes": false,
+      "acceptanceCriteria": [
+        "The default local pipeline creates bounded voice, music, sound-effect, silence, and mixed segments without requiring a custom Codex request",
+        "Every segment carries timecode, confidence, detector source, and measured, estimated, interpreted, or human-reviewed status",
+        "Voice-over and speaker identity remain unknown unless explicitly supported and reviewed",
+        "Optional diarization or source-separation failures preserve valid baseline outputs and never trigger an implicit network request"
+      ]
+    },
+    {
+      "id": "VEW-015",
+      "title": "Reviewed projects export a client-ready storyboard package",
+      "priority": 1,
+      "passes": false,
+      "acceptanceCriteria": [
+        "One validated client export dataset renders the same project content to HTML, Excel, and PDF",
+        "The workbook includes overview, complete shot storyboard, VO and on-screen text, music and rhythm, and provenance sheets",
+        "Normal analysis and Finalize create no Excel or PDF; export runs only after an explicit UI, CLI, or authorized Codex action",
+        "Default generation atomically replaces one stable current package and creates history only when the user explicitly saves a version",
+        "A versioned professional template handles fonts, images, wrapping, continuation pages, pagination, and client versus compact density without manual correction",
+        "Draft files are visibly unverified and final Excel and PDF downloads remain blocked until the current project is finalized",
+        "Export receipts bind media, visual, audio, timeline, review, report, template, and output hashes"
+      ]
+    },
+    {
+      "id": "VEW-016",
+      "title": "Audio and client-export quality are measured on redistributable fixtures",
+      "priority": 2,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Synthetic or licensed fixtures cover VO over music, multiple anonymous speakers, SFX, silence, mixed audio, Chinese and English, and no-audio controls",
+        "The benchmark reports ASR timing and text error, segment boundaries, supported event precision and recall, export coverage, rendering, runtime, and memory separately",
+        "Excel and PDF gates verify images, searchable text, Chinese glyphs, safe cells, metadata, page contract, and current receipts",
+        "Generated test documents, rendered pages, frames, browser profiles, and font caches use temporary directories and are removed after successful tests",
+        "Private client videos are never committed as benchmark assets"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "policy": "Only generated or explicitly redistributable fixtures may enter the public test suite.",
+  "fixtures": [
+    {
+      "id": "synthetic-video-benchmark-v1",
+      "generator": "src/video_analysis_mvp/benchmark.py#_generate_fixture",
+      "source_assets": "none; FFmpeg lavfi filters only",
+      "retained_media": false,
+      "license": "CC0-1.0",
+      "rights_holder": "Video Evidence Workbench contributors",
+      "generator_version": "synthetic-video-benchmark-v1",
+      "generation_command": "analyze-video benchmark --output <temporary-directory>",
+      "output_license_declaration": "Project-authored generator output is dedicated under CC0-1.0; no third-party media asset is incorporated.",
+      "coverage": ["hard-cuts", "fade", "animation", "vertical", "variable-frame-rate", "dense-audio-surrogate"]
+    },
+    {
+      "id": "deterministic-pcm-benchmark-v1",
+      "generator": "src/video_analysis_mvp/benchmark.py#run_audio_quality_benchmark",
+      "source_assets": "none; generated PCM samples only",
+      "retained_media": false,
+      "license": "CC0-1.0",
+      "rights_holder": "Video Evidence Workbench contributors",
+      "generator_version": "deterministic-pcm-benchmark-v1",
+      "generation_command": "scripts/benchmark-audio.sh",
+      "output_license_declaration": "Project-authored generator output is dedicated under CC0-1.0; no third-party media asset is incorporated.",
+      "coverage": ["silence", "regular-pulses", "stereo-energy", "irregular-transients", "corrupt-wav"]
+    },
+    {
+      "id": "synthetic-demo-v1",
+      "generator": "scripts/run-demo.sh",
+      "source_assets": "none; FFmpeg lavfi filters only",
+      "retained_media": false,
+      "license": "CC0-1.0",
+      "rights_holder": "Video Evidence Workbench contributors",
+      "generator_version": "synthetic-demo-v1",
+      "generation_command": "scripts/run-demo.sh <ignored-workspace>",
+      "output_license_declaration": "Project-authored generator output is dedicated under CC0-1.0; no third-party media asset is incorporated.",
+      "coverage": ["quick-start", "blocked-readiness", "local-only"]
+    }
+  ],
+  "private_reference_policy": {
+    "repository_media": false,
+    "repository_hash": false,
+    "use": "optional local human acceptance only"
+  }
+}

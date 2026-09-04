@@ -1,0 +1,62 @@
+# Video Evidence Workbench
+
+> Open-source, local-first, auditable shot-level video research workbench.
+
+Canonical repository: https://github.com/papperrollinggery/video-analysis-mvp-public
+
+Video Evidence Workbench converts a local video—or a supported public URL supplied through the trusted-operator CLI—into timecoded shots, keyframes, contact sheets, audio and rhythm data, readiness checks, lineage records, and portable evidence files. Browser/API intake is local-file-only. Deterministic extraction is the core; OpenAI or MiniMax vision annotation is optional. A complete provider pass can satisfy the structural gate, but important claims still require human verification against source timecodes.
+
+## Start here
+
+- [README](README.md): installation, commands, outputs, limits, and verification
+- [Changelog](CHANGELOG.md): public versions, notable behavior changes, and release boundaries
+- [Persistent synthetic demo](examples/demo/README.md): one-command real-pipeline trial and expected fail-closed receipt
+- [Six-case product benchmark](README.md#run-the-six-case-product-benchmark): generated fixtures, stage timing, boundary metrics, artifact completeness, and explicit non-goals
+- [Product strategy](docs/product-strategy.md): audience, positioning, non-goals, roadmap, and metrics
+- [Open-source launch plan](docs/open-source-launch.md): release gates, discovery map, community setup, and measurable adoption funnel
+- [Product maturity requirements](docs/product-maturity-requirements.md): competitor benchmark, maturity score, P0 workflow, and release gates
+- [Architecture](docs/architecture.md): pipeline, files, trust boundaries, and extension points
+- [Codex companion workflow](docs/codex-desktop.md): explicit local handoff to Codex Desktop and optional ChatGPT visualization
+- [Codex current-task contract](docs/codex-native-analysis.md): versioned prepare/apply workflow and model-identity limits
+- [Legacy migration](docs/migration.md): read-only inspection, explicit apply, rollback, and re-Finalize
+- [Audio intelligence schema](docs/schemas/audio-intelligence-v1.md): canonical VO/music/SFX/silence/mixed timeline and review fields
+- [Client export schema and template](docs/schemas/client-export-v1.md): one validated dataset for requested XLSX/PDF
+- [UI design contract](docs/ui-frontend-design-plan.md): information architecture, responsive behavior, and visual system
+- [FAQ](docs/faq.md): common questions, privacy, and troubleshooting
+- [Contributing](CONTRIBUTING.md): local setup and change requirements
+- [Security](SECURITY.md): vulnerability reporting and sensitive-data boundaries
+
+## Stable concepts
+
+- Project workspace: `analysis-projects/<project-id>/`
+- Persistent run control: `analysis-projects/.vew/runs/<run-id>.json`
+- Shot evidence: `data/shots.json` plus keyframes under `assets/keyframes/`
+- Structured sound evidence: `data/audio_intelligence.json` plus `data/audio_intelligence_generation.json`
+- Readiness: `data/readiness.json` schema v3
+- Bound human cut review: `data/boundary_review.json` (optional)
+- Provenance graph: `data/lineage.json`
+- Artifact lifecycle: `data/artifact_registry.json`
+- Human-readable package: `reports/`
+- Requested client package: `reports/client/current/`; history exists only after explicit Save version
+- Codex context: `reports/codex_handoff.md`
+- Visualization rows: `data/visualization_dataset.json`
+
+## Execution boundaries
+
+- Current Codex analysis must use `codex prepare` then `codex apply`; it returns to human review and never counts as verified provider execution or human approval.
+- Finalize commits evidence but does not create XLSX/PDF. Client files require a separate explicit export request.
+- BridgeDeck is an optional numeric-loopback, account-scoped, explicit-model adapter. The workbench does not discover accounts or copy environment credentials.
+- `migrate` is read-only by default. `--apply` invalidates supported legacy publication and requires the normal re-Finalize path.
+
+## Important limits
+
+- A passing readiness gate is not factual certification.
+- Model annotations are hypotheses until reviewed against the source timecodes.
+- External providers receive selected frames only after an explicit `vision` command or `run --with-vision` opt-in.
+- The HTTP API and schemas are pre-1.0.
+- Live BridgeDeck/OpenAI/MiniMax behavior and model identity are not proven by synthetic contract tests.
+- Local background runs are persistent and retryable on one machine; they are not a distributed job queue.
+- CLI URL ingest validates the initial public target; downloader redirects and DNS rebinding remain an external network boundary.
+- The declared runtime targets are macOS and POSIX/Linux; Windows is unverified.
+- Canonical project identity and release history live at the repository URL above.
+- The project does not include hosted accounts, payment, or autonomous publishing.

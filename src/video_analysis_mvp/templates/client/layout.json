@@ -1,0 +1,41 @@
+{
+  "variants": {
+    "client-landscape-4": {"shots_per_page": 4, "minimum_frame_width_mm": 78, "minimum_text_width_mm": 92},
+    "compact-landscape-8": {"shots_per_page": 8, "minimum_frame_width_mm": 48, "minimum_text_width_mm": 54},
+    "text-continuation": {"repeat_shot_identity": true, "maximum_lines_per_block": 42},
+    "missing-frame": {"show_evidence_status": true, "placeholder_text": "Frame unavailable / 画面证据缺失"},
+    "audio-timeline-wide": {"minimum_track_height_mm": 7, "maximum_rows_per_page": 28}
+  },
+  "limits": {
+    "maximum_shots": 20000,
+    "maximum_audio_events": 100000,
+    "maximum_text_bytes_per_cell": 262144,
+    "maximum_embedded_image_bytes": 16777216,
+    "maximum_total_image_bytes": 268435456,
+    "maximum_continuation_blocks_per_record": 64,
+    "minimum_font_pt": 8.5
+  },
+  "renderer_limits": {
+    "xlsx": {
+      "maximum_shots": 3200,
+      "maximum_audio_events": 8000
+    }
+  },
+  "line_estimation": {
+    "cjk_characters_per_line": 24,
+    "latin_characters_per_line": 42,
+    "line_height_multiplier": 1.35
+  },
+  "pagination": {
+    "avoid_orphan_headings": true,
+    "avoid_single_record_final_page": true,
+    "repeat_table_headers": true,
+    "continue_instead_of_shrink": true
+  },
+  "fallbacks": {
+    "missing_logo": "omit",
+    "missing_frame": "missing-frame",
+    "missing_cjk_font": "fail_pdf_use_declared_fallback_xlsx",
+    "unavailable_audio_capability": "show_unknown"
+  }
+}
