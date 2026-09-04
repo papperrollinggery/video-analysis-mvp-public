@@ -1,24 +1,24 @@
-# Mature candidate release readiness
+# v0.2.1 release readiness
 
-Status: all applicable local runtime gates passed and the runtime candidate
-ended **APPROVE WITH RESIDUALS** with no P0/P1/P2 finding. Publication metadata
-and CI-trigger deltas passed independent review. The remote minimum-dependency
-security correction is awaiting its replacement PR checks.
-This document records the local pre-publication verification. GitHub checks,
-the merged revision and release page are the authority for remote publication;
-this receipt does not prove a separate deployment or package-registry upload.
+Status: **local candidate gates and independent final review passed; exact PR
+and tag CI remain required**. This file records evidence for the v0.2.1 maintenance
+candidate. It does not prove publication, provider accuracy, adoption or a
+stable cross-platform release.
 
-## Candidate boundary
+## Candidate scope
 
-The current product file set contains **205** non-ignored files and has digest:
+v0.2.1 contains the post-v0.2.0 release-governance fixes, reliable npm audit
+result classification, separately verified GitHub Actions v7 upgrades, release
+metadata consistency checks and safer Dependabot grouping. It does not change
+the analysis, human-review, Finalize or client-export product workflow.
 
-```text
-sha256:7c9b80fcc8a7167bf51a897a761cc46647cb504259e5e653f8af293bcf29d6c8
-```
-
-The digest hashes `mode\0path\0size\0bytes\0` in sorted Git-candidate order.
-It includes source, tests, public docs, generated frontend assets and all six
-current screenshots. To avoid circular hashes, it excludes only:
+The frozen candidate contains **210 product files** with SHA-256
+`3f7bd9ad96e941afb78aafb48961f5acb031234d2bdb6863f79c2472c1a56681`.
+The same binding is recorded in both
+`docs/screenshots/ui-acceptance-receipt.json` and
+`docs/evidence/mature-candidate-receipt.json`. The product digest excludes only
+the following self-referential evidence files, which are bound separately by
+the mature receipt:
 
 - `docs/screenshots/ui-acceptance-receipt.json`
 - `docs/evidence/mature-candidate-receipt.json`
@@ -26,155 +26,58 @@ current screenshots. To avoid circular hashes, it excludes only:
 - `docs/cold-review.md`
 - `progress.txt`
 
-The mature-candidate receipt separately hashes these evidence files.
+## Fresh local verification
 
-## Local gate results
-
-| Gate | Current result |
+| Gate | v0.2.1 candidate result |
 | --- | --- |
-| Full Python suite | 518 passed, 29 optional-runtime skips, 393 subtests in 52.76 s; exit 0 |
-| Focused security/Codex/BridgeDeck/migration/API regression | 110 passed, 84 subtests in 11.77 s; exit 0 |
-| Ruff 0.15.22 | `src` and `tests` clean |
-| Bandit 1.9.4 | no medium/high findings; the three B314 suppressions are limited to bounded self-generated XLSX post-validation |
-| Python dependency audit | pip-audit 2.10.1 reported no known vulnerability in the installed `.venv` path; unpublished editable package skipped |
-| Frontend dependency audit | `browserslist` updated 4.28.6 → 4.28.8 after two high-severity advisories; current cache-backed `npm audit --offline --audit-level=high` reports 0 vulnerabilities |
-| Frontend | same-origin integration, TypeScript/Vite build and export-center E2E passed |
-| Browser E2E | generate 2, cancel 1, save 1, delete 1, serialized status reads, 3 px focus, no unexpected console problems |
-| Real client render | 71/71 passed in 78.853 s with openpyxl, Playwright/Chrome, CJK font, pypdf and LibreOffice; a current standalone XLSX+PDF transaction completed in 4.376 s with output hashes recorded |
-| Install/migration | current 210-file candidate, fresh temporary venv, candidate wheel, installed migrate dry-run/apply, frontend-byte and served-byte parity passed; exact-lock npm install was cache-backed and reported 0 vulnerabilities |
-| Pipeline smoke | package, persistent demo, synchronous/asynchronous API and full review/Finalize lifecycle passed |
-| Product benchmark | six of six functional and five of five accuracy-gated video cases passed in 5.608 s with 50,921,472-byte Python-process peak RSS; fade/dissolve remains observational |
-| Audio benchmark | five of five generated PCM cases passed in 0.070 s; ASR and semantic audio identity remain `not_run` |
-| UI capture | six current PNGs inspected; 1440×900, 900×1000 and 390×844 had status 200, no console warning/error, no horizontal overflow and no undersized measured controls |
-| UI interaction | review/source/Codex/mobile-Codex focus restoration, current XLSX export, direct run reload and workspace link verified |
-| Artifact cleanup | 210 candidate paths including evidence files; one bounded diagnostic file; no generated media/model/customer document in the release candidate |
-| Docs and metadata | 77 local Markdown file links resolve; 14 JSON, one TOML and six YAML/CFF files parse; generated-Markdown safety is covered by the full suite |
+| Full Python suite | 520 passed, 29 optional-runtime skips, 393 subtests in 47.32 s; exit 0 |
+| Release metadata | pyproject, package, lock, Python, MCP client, citation, README, changelog, release note and mature status agree on 0.2.1 |
+| Python lint/source scan | Ruff 0.15.22 clean; Bandit 1.9.4 found no medium/high issue |
+| Python dependency audit | pip-audit 2.10.1 reported no known vulnerability; unpublished editable package explicitly skipped |
+| Frontend install/audit | clean `npm ci`; 78 packages audited; 0 vulnerabilities |
+| Frontend contracts | same-origin integration passed; seven PDF diagnostic cases passed; npm audit classifier clean/high/critical/malformed/outage/unknown cases passed |
+| Frontend build | TypeScript/Vite production build transformed 1,703 modules; packaged asset names and bytes remained unchanged |
+| Browser E2E | explicit generate/cancel/save/delete lifecycle, 1440/900/390 responsive checks, 44 px targets and 3 px focus passed without unexpected console problems |
+| Real XLSX/PDF/browser | 71 tests passed in 63.015 s with Playwright Chrome, Noto Sans CJK, pypdf and LibreOffice required |
+| Workflow smokes | package, persistent demo, synchronous/persistent API, review/Finalize/mutation/refinalize lifecycle passed |
+| Product benchmark | 6/6 functional and 5/5 accuracy-gated video cases passed in 5.646 s; one fade case remained observational; Python-process peak RSS 52,101,120 bytes |
+| Audio benchmark | 5/5 generated PCM cases passed in 0.071 s; ASR and semantic identity accuracy remain `not_run` |
+| Clean install | 215-file candidate copied; clean frontend build, packaged mirror, wheel, migration and installed HTTP asset parity passed |
+| Artifact policy | candidate audit passed; no generated media, model output or client document entered the repository |
 
-The current UI receipt independently re-hashes the 205-file product candidate,
-frontend source, packaged frontend files and all screenshots.
+## GitHub maintenance disposition
 
-The six screenshots were captured on 2026-09-01 and rebound to the repaired
-candidate on 2026-09-04; no Playwright trace was retained. The later visible
-frontend delta was limited to legacy-viewer wording and its production build,
-asset parity and E2E were rerun. Recapture screenshots if any further visible
-UI changes are made before an authorized public release.
+- PR #7 repaired release-receipt scope and immutable-tag verification.
+- PR #8 classified npm advisory endpoint outages without hiding confirmed
+  high/critical findings or unknown failures.
+- Dependabot PRs #2, #3, #4 and #5 were each rebased onto the cumulative current
+  main branch, passed the complete hosted Linux/macOS, Python 3.11/3.12,
+  frontend, security and real-export matrix, and were merged separately.
+- Dependabot PR #6 was closed without merge. It combined unrelated frontend
+  major upgrades while leaving the packaged build mirror and UI evidence stale.
+  Dependabot now groups frontend minor/patch updates only; future major updates
+  must be reviewed independently.
+- The release-candidate base before version freeze is
+  `2e3fd3bfe39e9b82f51f41923b2f23090172ff07`.
 
-The first final install attempt reached `npm ci` but the public registry request
-produced no output for almost three minutes and was interrupted. The second run
-used the exact lockfile and existing npm cache (`npm_config_offline=true`) and
-passed from candidate reconstruction through installed HTTP byte parity. This
-proves a clean local wheel/venv and reproducible cached frontend install, not an
-uncached remote first install. The final 209-file publication candidate repeated
-that cache-backed clean-install path successfully after canonical metadata and
-release notes were added.
+## Security and truth boundaries
 
-## Canonical GitHub state
+- Confirmed npm high/critical findings fail CI. Malformed and unknown audit
+  failures also fail. A scoped registry advisory endpoint timeout/503 emits an
+  `unavailable` warning and cannot be represented as a clean audit.
+- URL ingest remains trusted-operator-only because downloader redirects and
+  later DNS resolution are outside the local public-address precheck.
+- Optional OpenAI, MiniMax and BridgeDeck calls retain bounded bytes/socket
+  timeouts but do not have a separate monotonic total-response deadline.
+- Live provider inference, Windows, ASR accuracy, semantic VO/music/SFX
+  identity accuracy, copyright suitability, public adoption and 2,000 stars are
+  outside this maintenance-release claim.
 
-- repository: `https://github.com/papperrollinggery/video-analysis-mvp-public`;
-- remote base before this upgrade: `8419b3a1d1ff` on `main`;
-- visibility: public;
-- private vulnerability reporting: enabled and read back through GitHub;
-- repository description and 11 accurate discovery topics: updated and read back;
-- CI trigger: pull requests run once; branch pushes run only on `main`, avoiding
-  duplicate feature-branch push and PR matrices;
-- existing pull requests, issues, releases and Actions runs before this upgrade:
-  none.
+## Remaining publication gates
 
-The branch, PR, checks, merge commit and tag are recorded by GitHub after this
-local snapshot. They must be inspected before the release is described as
-published.
-
-The first exact-SHA PR run supplied useful red evidence rather than release
-proof. It found four independent CI integration gaps: a vulnerable minimum
-`yt-dlp` pin, npm 10 audit incompatibility with the npm 11 lock tree, macOS
-loopback server startup blocked by reverse DNS, and a Bash quoting error while
-binding the Playwright browser path. The current candidate raises the minimum
-to the first patched `yt-dlp` release, pins npm only in the affected audit job,
-uses an IPv4/IPv6 loopback server that avoids reverse DNS, and uses a
-syntax-checked two-step browser-path assignment. Local targeted tests and
-independent delta review pass; replacement GitHub checks remain mandatory.
-
-The bounded renderer diagnostic on the next SHA localized the remaining real
-export failure to browser launch after earlier direct PDF renders succeeded.
-The renderer now keeps HTML/raw PDF/config in the original output-adjacent
-same-volume staging while giving Chromium a separate short, mode-0700 system
-temporary HOME/TMPDIR that is removed on every exit path. The change has no
-effect on final atomic publication and passed independent review without a
-P0-P3 finding; the next remote real-render job remains authoritative.
-
-The following PR SHA confirmed the remote real XLSX/PDF/browser job passes.
-Its frontend-only failure occurred because the pure diagnostic test imported a
-driver whose top level still loaded optional Playwright from the Python package
-directory. Playwright loading now occurs only inside executable `main()` after
-the fixed launch stage is selected; pure helper imports require no browser
-module, while real rendering still resolves it through explicit `NODE_PATH`.
-This one-line dependency-load relocation passed independent review with no
-P0-P3 finding. A final exact-SHA PR matrix is still required.
-
-## Security disposition
-
-Codex Security standard scan
-`bfb9a48c-8668-4a1d-a7ca-cfc4f69bb1d1` inspected the pre-remediation
-snapshot and produced three medium plus two low findings. Current fixes and
-fresh regression evidence close:
-
-- unbounded `ffprobe` execution;
-- signed URL/password values accepted directly in CLI argv;
-- missing FastAPI `Sec-Fetch-Site: cross-site` guard;
-- value-file permission/read TOCTOU;
-- playlist/multi-video disk amplification;
-- verified ffmpeg/ffprobe path drift.
-
-Independent delta review ended CLEAN. Two explicit residuals remain:
-
-1. **Medium, accepted boundary:** yt-dlp controls redirects and later DNS
-   resolution. URL ingest requires an owner-only value file plus
-   `--acknowledge-url-risk`, rejects playlists, and is documented as
-   trusted-operator-only—not an SSRF sandbox. Use a separately restricted
-   downloader for untrusted URLs.
-2. **Low, deferred:** provider/BridgeDeck reads use bounded bytes and socket
-   timeouts but not a separate monotonic total-response deadline. It requires an
-   explicitly configured provider and does not affect the deterministic core.
-
-TAC access could not be verified because the Codex Security Access connector
-was not logged in (`USER_NOT_LOGGED_IN`). The scan still completed locally and
-its report exists, but this is not a TAC-grant claim.
-
-## Product completion audit
-
-- Structured VO/music/SFX/silence/mixed timeline, machine proposal, operator
-  review, effective values and shot associations are implemented and gated.
-- Review saves never auto-Finalize or auto-export.
-- The legacy evidence viewer retains all-shot inspection, the ads keeper
-  sidecar and explicit readiness-checked Finalize. Retired shot/vision POST
-  endpoints return `410`; they cannot silently mutate or regenerate reports.
-- Professional XLSX/PDF share one validated dataset and fixed template; output
-  is created only by explicit request, one current package is replaced, and
-  history is created only by Save version.
-- Current Codex analysis uses the versioned prepare/apply contract, returns to
-  human review and does not claim provider/human/model verification.
-- BridgeDeck remains an optional explicit numeric-loopback/account/model
-  adapter with no environment credential forwarding; live upstream inference
-  remains unverified.
-- Legacy migration is read-only by default, explicit on apply, rollback-safe,
-  crash-recoverable and preserves saved versions.
-- The open-source README, schemas, FAQ, launch plan, `llms.txt`, citation,
-  governance files and measured 2,000-star scenario are current.
-- Over-correction review rejected auto migration/export/provider fallback,
-  heavyweight default runtimes, duplicate transaction systems, fake canonical
-  metadata, keyword-stuffed AEO files and unverified platform claims. A later
-  compatibility repair kept valid legacy viewing/ads behavior while removing
-  only the proven bypass; its independent code-review delta ended CLEAN.
-
-## Unverified external states
-
-- exact merged commit/tag and public release state, which are recorded externally by GitHub;
-- remote GitHub Actions execution for a specific pushed revision;
-- Windows and every Linux distribution/codec;
-- live OpenAI, MiniMax and BridgeDeck authentication, cost, retention and model
-  accuracy;
-- real ASR accuracy and semantic music/SFX/VO identity accuracy;
-- public adoption, qualified-user funnel and 2,000 stars.
-
-The product is eligible only for a **local mature-candidate** verdict. It is not
-yet a public or cross-platform stable release.
+1. Freeze and independently recompute the exact product digest and four
+   evidence-file bindings.
+2. Pass the complete GitHub PR matrix on the exact candidate SHA.
+3. Merge without content changes, create immutable tag `v0.2.1`, and pass the
+   tag-only release receipt gate plus the normal tag CI matrix.
+4. Create and read back the GitHub pre-release and attached candidate receipt.

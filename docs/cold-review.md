@@ -1,5 +1,40 @@
 # Mature candidate independent cold review
 
+## v0.2.1 maintenance delta
+
+Status: **APPROVE**. Independent review found no remaining P0, P1, P2 or P3
+finding in the frozen v0.2.1 maintenance candidate.
+
+The reviewer independently recomputed 210 product files and matched SHA-256
+`3f7bd9ad96e941afb78aafb48961f5acb031234d2bdb6863f79c2472c1a56681`.
+The candidate gate, release-metadata contract and frontend contract passed; 14
+JSON, one TOML and six YAML/CFF files parsed, and the checked candidate-local
+Markdown links resolved. Link counts are deliberately omitted because image-link
+inclusion differs across otherwise equivalent bounded parsers.
+
+The first review pass found one release-truth conflict: the v0.2.1 mature
+receipt inherited an unscoped v0.2.0 final verdict while the current review was
+still pending. The repair nests all old findings under `v0.2.0_history` and
+gives v0.2.1 an independent status/verdict. A regression now requires the
+current version to be approved and forbids an unscoped final verdict.
+
+The reviewer also confirmed that the four Actions pins exactly match their
+declared v7 releases; PRs #2/#3/#4/#5 passed their exact cumulative matrices
+before merge; PR #6 remains closed and unmerged; and the Dependabot
+minor/patch-only group leaves major version updates independent without
+weakening security updates. No product behavior or visible UI changed, so the
+existing screenshots remain applicable and their older capture timestamp stays
+explicit.
+
+Accepted residuals are unchanged: live providers, Windows, ASR/semantic audio
+accuracy, downloader redirect/DNS confinement, a separate provider total
+response deadline, public adoption and 2,000 stars remain outside this release
+claim. Exact PR and tag CI plus GitHub pre-release publication are still
+required external gates.
+
+The sections below preserve the v0.2.0 review history and are not fresh v0.2.1
+approval evidence.
+
 Status: **APPROVE WITH RESIDUALS**. Final repaired-candidate review found no
 P0, P1 or P2 issue.
 
