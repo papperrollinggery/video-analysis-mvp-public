@@ -133,3 +133,11 @@ only browser runtime state to a separate short, mode-0700 system temporary
 directory. HTML/raw PDF/config and final publication remain output-adjacent and
 same-volume; both temporary contexts clean up on success, ToolError and
 cancellation. Independent review found no P0-P3 and no over-correction.
+
+The next remote SHA validated the real XLSX/PDF/browser job. Its remaining
+frontend failure was isolated to the new pure Node diagnostic test: importing
+the driver eagerly required optional Playwright from a different directory.
+Moving that single require into executable `main()` lets pure helpers load
+without Playwright and preserves explicit `NODE_PATH` resolution for real
+rendering. Missing modules still flow through the bounded launch diagnostic;
+no raw Node stack is emitted. Independent review found no P0-P3.

@@ -1,7 +1,6 @@
 "use strict";
 
 const fs = require("node:fs");
-const { chromium } = require("playwright");
 
 let stage = "startup";
 
@@ -36,6 +35,7 @@ async function main() {
   const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
   const html = fs.readFileSync(htmlPath, "utf8");
   stage = "launch-browser";
+  const { chromium } = require("playwright");
   const browser = await chromium.launch({
     headless: true,
     executablePath: config.browserExecutable,

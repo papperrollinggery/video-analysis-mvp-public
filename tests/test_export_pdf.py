@@ -239,6 +239,11 @@ class PdfExportTest(unittest.TestCase):
             "RendererDiagnostic:${stage}:${code}:${name}",
             pdf_module.DRIVER_PATH.read_text(encoding="utf-8"),
         )
+        driver_source = pdf_module.DRIVER_PATH.read_text(encoding="utf-8")
+        self.assertGreater(
+            driver_source.index('const { chromium } = require("playwright");'),
+            driver_source.index("async function main()"),
+        )
 
     @unittest.skipUnless(PDF_RUNTIME and PYPDF_AVAILABLE, "dedicated PDF runtime is unavailable")
     def test_pdf_rejects_a_fake_font_without_publishing_an_output(self) -> None:

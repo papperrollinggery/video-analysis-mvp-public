@@ -33,7 +33,7 @@ PDF_RECEIPT_SCHEMA = "pdf-render-receipt/v1"
 MAX_OUTPUT_BYTES = 512 * 1024 * 1024
 MAX_RENDERER_LOG_BYTES = 2 * 1024 * 1024
 DRIVER_PATH = Path(__file__).parent / "templates" / "client" / "render_pdf.cjs"
-DRIVER_SHA256 = "f9a3992a2f9ab2c835d63122de7766dd1a33ee8d3712a96095a5f44052e9c995"
+DRIVER_SHA256 = "c035717b9d99804f0c2d8fb9f7fcdb1600799787ac60d6d7b7bb0ddc25d69780"
 _RENDERER_DIAGNOSTIC = re.compile(
     r"(?:^|\n)RendererDiagnostic:"
     r"(startup|read-input|launch-browser|open-page|install-network-guard|"

@@ -13,7 +13,7 @@ this receipt does not prove a separate deployment or package-registry upload.
 The current product file set contains **205** non-ignored files and has digest:
 
 ```text
-sha256:9c8e8cbce9a08d6f8b576325587812e495e9c929b92c8cd56e971f7ad9713b97
+sha256:7c9b80fcc8a7167bf51a897a761cc46647cb504259e5e653f8af293bcf29d6c8
 ```
 
 The digest hashes `mode\0path\0size\0bytes\0` in sorted Git-candidate order.
@@ -101,6 +101,15 @@ same-volume staging while giving Chromium a separate short, mode-0700 system
 temporary HOME/TMPDIR that is removed on every exit path. The change has no
 effect on final atomic publication and passed independent review without a
 P0-P3 finding; the next remote real-render job remains authoritative.
+
+The following PR SHA confirmed the remote real XLSX/PDF/browser job passes.
+Its frontend-only failure occurred because the pure diagnostic test imported a
+driver whose top level still loaded optional Playwright from the Python package
+directory. Playwright loading now occurs only inside executable `main()` after
+the fixed launch stage is selected; pure helper imports require no browser
+module, while real rendering still resolves it through explicit `NODE_PATH`.
+This one-line dependency-load relocation passed independent review with no
+P0-P3 finding. A final exact-SHA PR matrix is still required.
 
 ## Security disposition
 
