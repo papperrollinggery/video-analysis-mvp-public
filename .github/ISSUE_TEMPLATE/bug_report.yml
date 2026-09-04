@@ -1,0 +1,77 @@
+name: Bug report
+description: Report a reproducible problem using synthetic or shareable media.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach private media, passwords, API keys, private URLs, or unsanitized project files. For security issues, follow SECURITY.md.
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Observed outcome
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include exact commands and the smallest synthetic or shareable fixture.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: input
+    id: revision
+    attributes:
+      label: Revision or version
+      description: Commit SHA, tag, or package version.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, Node, ffmpeg, ffprobe, and relevant optional tools/providers. Never paste keys.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Error text, status envelope, readiness reasons, or screenshots with private paths and media removed.
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: External vision involved?
+      options:
+        - "No"
+        - Current Codex task
+        - OpenAI
+        - MiniMax
+        - BridgeDeck
+        - Unknown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Safety checks
+      options:
+        - label: I removed credentials, private URLs, private media, and sensitive paths.
+          required: true
+        - label: I verified this is not a vulnerability report.
+          required: true

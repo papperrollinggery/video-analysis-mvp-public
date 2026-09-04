@@ -1,0 +1,18 @@
+{
+  "schema_version": "demo-receipt/v1",
+  "invariants": {
+    "profile": "research",
+    "external_vision": "disabled",
+    "asr": "skipped",
+    "readiness_status": "blocked",
+    "professional_export_allowed": false
+  },
+  "required_artifacts": [
+    "project_manifest.json",
+    "data/shots.json",
+    "data/readiness.json",
+    "reports/storyboard.html",
+    "reports/codex_handoff.md",
+    "data/visualization_dataset.json"
+  ]
+}

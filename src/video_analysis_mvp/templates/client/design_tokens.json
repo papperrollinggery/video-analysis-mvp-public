@@ -1,0 +1,35 @@
+{
+  "colors": {
+    "ink": "#111827",
+    "navy": "#0B1020",
+    "accent": "#2E7DFF",
+    "teal": "#237A70",
+    "paper": "#F7F9FC",
+    "line": "#D6DDEA",
+    "muted": "#667085",
+    "warning": "#8A5600"
+  },
+  "typography": {
+    "font_stack": ["Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", "Arial", "sans-serif"],
+    "cjk_font_candidates": ["Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei"],
+    "cover_pt": 28,
+    "section_pt": 17,
+    "table_header_pt": 9.5,
+    "body_pt": 9.5,
+    "metadata_pt": 8.5,
+    "minimum_pt": 8.5
+  },
+  "spacing": {
+    "base_mm": 4,
+    "page_safe_mm": 12,
+    "cell_padding_mm": 2.5,
+    "image_text_gap_mm": 4,
+    "section_gap_mm": 10
+  },
+  "geometry": {
+    "page": "A4-landscape",
+    "frame_fit": "contain-letterbox",
+    "border_radius_px": 4,
+    "line_width_px": 1
+  }
+}

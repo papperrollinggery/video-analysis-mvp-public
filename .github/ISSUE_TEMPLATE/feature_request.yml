@@ -1,0 +1,61 @@
+name: Feature request
+description: Propose an evidence-workflow improvement with a testable outcome.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What evidence or review job is difficult today? Describe the user, input, and consequence.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Testable outcome
+      description: What observable result would make the job meaningfully better?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope
+      description: Include the smallest useful workflow and what should remain out of scope.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Primary surface
+      options:
+        - Deterministic media pipeline
+        - Shot or evidence schema
+        - Structured audio timeline
+        - Human review and readiness
+        - Client XLSX/PDF exports
+        - Migration or recovery
+        - Local API
+        - Web UI
+        - Documentation
+        - Provider adapter
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Data, privacy, and compatibility risks
+      description: Note external network calls, schema migration, private media, or provider coupling.
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Suggested verification
+      description: Fixture, command, expected artifact, or UI interaction that would prove the outcome.
+    validations:
+      required: true

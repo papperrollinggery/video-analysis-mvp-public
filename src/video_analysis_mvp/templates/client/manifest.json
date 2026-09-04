@@ -1,0 +1,32 @@
+{
+  "template_id": "client-storyboard",
+  "template_version": "1.0.0",
+  "compatible_dataset_schemas": ["client-export-dataset/v1"],
+  "default_language": "zh",
+  "default_density": "client",
+  "languages": ["zh", "en", "bilingual"],
+  "densities": ["client", "compact"],
+  "workbook_sheets": [
+    "01_项目概览",
+    "02_逐镜分镜表",
+    "03_VO与画面文字",
+    "04_音乐与节奏",
+    "05_证据与说明"
+  ],
+  "pdf_sections": [
+    "cover",
+    "executive_overview",
+    "narrative_audio_arc",
+    "storyboard",
+    "voice_and_onscreen_text",
+    "music_sfx_rhythm",
+    "evidence_and_limitations"
+  ],
+  "required_files": ["design_tokens.json", "layout.json"],
+  "optional_brand_fields": ["project_subtitle", "logo_path", "accent_color"],
+  "renderer_contract": {
+    "xlsx": "1.x",
+    "html": "1.x",
+    "pdf": "1.x"
+  }
+}

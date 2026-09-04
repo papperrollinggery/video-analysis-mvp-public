@@ -1,0 +1,27 @@
+{
+  "name": "video-evidence-workbench-frontend",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "test:integration": "node tests/vite-proxy-origin.integration.mjs",
+    "test:e2e": "node tests/export-center.e2e.mjs",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "lucide-react": "^0.555.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-router-dom": "^7.9.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "playwright": "1.60.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.6"
+  }
+}
