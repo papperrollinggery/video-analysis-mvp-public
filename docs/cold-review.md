@@ -80,7 +80,7 @@ reconnected and publication was explicitly authorized. README badges/status,
 package project URLs, citation metadata, `llms.txt`, security reporting,
 launch/growth wording, changelog and v0.2.0 release notes were updated without a
 runtime-code change. The resulting 204-file product digest is
-`a57b7263199f4bad8a8955b8c295d79d24f8d3ed13053ca6b984925b079183fc`.
+`f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f`.
 Its independent staged review found one P2 contradiction in the deferred list:
 canonical URLs, badges and GitHub release were still labelled deferred after
 being enabled. The minimal wording repair retained only genuinely unavailable
@@ -115,3 +115,12 @@ real-render job had a Bash quoting error before runtime execution; its
 two-step browser path assignment passes `bash -n` and resolves the installed
 Playwright browser locally. Independent review found no P0-P3 in these fixes;
 the next exact-SHA GitHub run remains the publication gate.
+
+Because the real-render failure occurred inside Playwright after other real PDF
+tests passed, the driver now emits only a bounded stage, fixed error code and
+sanitized error class. It never emits the raw message or path. A Node test
+verifies specific errno classification and close-stage preservation; Python
+accepts only a complete final marker from fixed stage/code sets and rejects
+path-embedded, oversized or trailing forgeries. Independent review found no
+P0-P3. This diagnostic does not change successful PDF bytes or receipts and is
+used only to make the next remote failure actionable.

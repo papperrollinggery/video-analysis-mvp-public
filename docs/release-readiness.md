@@ -10,10 +10,10 @@ this receipt does not prove a separate deployment or package-registry upload.
 
 ## Candidate boundary
 
-The current product file set contains **204** non-ignored files and has digest:
+The current product file set contains **205** non-ignored files and has digest:
 
 ```text
-sha256:a57b7263199f4bad8a8955b8c295d79d24f8d3ed13053ca6b984925b079183fc
+sha256:f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f
 ```
 
 The digest hashes `mode\0path\0size\0bytes\0` in sorted Git-candidate order.
@@ -32,7 +32,7 @@ The mature-candidate receipt separately hashes these evidence files.
 
 | Gate | Current result |
 | --- | --- |
-| Full Python suite | 517 passed, 28 optional-runtime skips, 393 subtests in 50.94 s; exit 0 |
+| Full Python suite | 518 passed, 28 optional-runtime skips, 393 subtests in 49.40 s; exit 0 |
 | Focused security/Codex/BridgeDeck/migration/API regression | 110 passed, 84 subtests in 11.77 s; exit 0 |
 | Ruff 0.15.22 | `src` and `tests` clean |
 | Bandit 1.9.4 | no medium/high findings; the three B314 suppressions are limited to bounded self-generated XLSX post-validation |
@@ -41,16 +41,16 @@ The mature-candidate receipt separately hashes these evidence files.
 | Frontend | same-origin integration, TypeScript/Vite build and export-center E2E passed |
 | Browser E2E | generate 2, cancel 1, save 1, delete 1, serialized status reads, 3 px focus, no unexpected console problems |
 | Real client render | 69/69 passed in 75.342 s with openpyxl, Playwright/Chrome, CJK font, pypdf and LibreOffice; a separate real XLSX+PDF transaction completed in 4.403 s and output hashes were recorded |
-| Install/migration | current 209-file candidate, fresh temporary venv, candidate wheel, installed migrate dry-run/apply, frontend-byte and served-byte parity passed; exact-lock npm install was cache-backed and reported 0 vulnerabilities |
+| Install/migration | pre-diagnostic 209-file candidate, fresh temporary venv, candidate wheel, installed migrate dry-run/apply, frontend-byte and served-byte parity passed; exact-lock npm install was cache-backed and reported 0 vulnerabilities |
 | Pipeline smoke | package, persistent demo, synchronous/asynchronous API and full review/Finalize lifecycle passed |
 | Product benchmark | six of six functional and five of five accuracy-gated video cases passed in 5.608 s with 50,921,472-byte Python-process peak RSS; fade/dissolve remains observational |
 | Audio benchmark | five of five generated PCM cases passed in 0.070 s; ASR and semantic audio identity remain `not_run` |
 | UI capture | six current PNGs inspected; 1440×900, 900×1000 and 390×844 had status 200, no console warning/error, no horizontal overflow and no undersized measured controls |
 | UI interaction | review/source/Codex/mobile-Codex focus restoration, current XLSX export, direct run reload and workspace link verified |
-| Artifact cleanup | 209 candidate paths including evidence files; one bounded diagnostic file; no generated media/model/customer document in the release candidate |
+| Artifact cleanup | 210 candidate paths including evidence files; one bounded diagnostic file; no generated media/model/customer document in the release candidate |
 | Docs and metadata | 77 local Markdown file links resolve; 14 JSON, one TOML and six YAML/CFF files parse; generated-Markdown safety is covered by the full suite |
 
-The current UI receipt independently re-hashes the 204-file product candidate,
+The current UI receipt independently re-hashes the 205-file product candidate,
 frontend source, packaged frontend files and all screenshots.
 
 The six screenshots were captured on 2026-09-01 and rebound to the repaired

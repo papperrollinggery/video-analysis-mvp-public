@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 from tests.test_audio_review import audio_review_fixture
 from tests.test_evidence_handoff import PNG_1X1
+from video_analysis_mvp import export_pdf as pdf_module
 from video_analysis_mvp.client_export_dataset import (
     _canonical_digest,
     _client_text,
@@ -199,6 +200,45 @@ class PdfExportTest(unittest.TestCase):
                 browser_executable=self.paths.root / "missing-browser",
             )
         self.assertFalse(self.pdf_path().exists())
+
+    def test_renderer_failure_diagnostic_is_bounded_and_path_free(self) -> None:
+        formatter = getattr(pdf_module, "_renderer_failure_detail", None)
+        self.assertIsNotNone(formatter)
+        private_path = "/Users/example/private/browser"
+        detail = formatter(
+            "Command failed\n"
+            f"{private_path}\n"
+            "RendererDiagnostic:launch-browser:browser-launch-failed:Error"
+        )
+
+        self.assertEqual(
+            " [stage=launch-browser, code=browser-launch-failed, name=Error]",
+            detail,
+        )
+        self.assertNotIn(private_path, detail)
+        self.assertEqual(
+            "",
+            formatter(
+                "/tmp/RendererDiagnostic:launch-browser:browser-launch-failed:Error/output"
+            ),
+        )
+        self.assertEqual(
+            "",
+            formatter(
+                "RendererDiagnostic:launch-browser:browser-launch-failed:"
+                + "E" * 65
+            ),
+        )
+        self.assertEqual(
+            "",
+            formatter(
+                "RendererDiagnostic:launch-browser:browser-launch-failed:Error trailing"
+            ),
+        )
+        self.assertIn(
+            "RendererDiagnostic:${stage}:${code}:${name}",
+            pdf_module.DRIVER_PATH.read_text(encoding="utf-8"),
+        )
 
     @unittest.skipUnless(PDF_RUNTIME and PYPDF_AVAILABLE, "dedicated PDF runtime is unavailable")
     def test_pdf_rejects_a_fake_font_without_publishing_an_output(self) -> None:

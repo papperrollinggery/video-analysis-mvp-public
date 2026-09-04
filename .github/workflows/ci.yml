@@ -137,6 +137,9 @@ jobs:
       - name: Test Vite proxy origin isolation
         run: npm run test:integration
 
+      - name: Test PDF driver diagnostics
+        run: npm run test:pdf-driver
+
       - name: Build
         run: npm run build
 

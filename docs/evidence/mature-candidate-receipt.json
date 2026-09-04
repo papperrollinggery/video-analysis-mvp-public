@@ -1,11 +1,11 @@
 {
   "schema_id": "vew-mature-candidate-receipt/v1",
   "status": "v0.2.0_release_candidate_pre_push",
-  "recorded_at": "2026-09-04T15:30:53+08:00",
+  "recorded_at": "2026-09-04T15:50:49+08:00",
   "candidate": {
     "scope": "local mature candidate only",
-    "file_count": 204,
-    "sha256": "a57b7263199f4bad8a8955b8c295d79d24f8d3ed13053ca6b984925b079183fc",
+    "file_count": 205,
+    "sha256": "f37351ee4ba395076e25cf9999b8746aa03625e112b3bbce1c50d43fd740d49f",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -27,7 +27,7 @@
       "id": "python_full",
       "command": ".venv/bin/python -m pytest -q tests",
       "exit_code": 0,
-      "result": "517 passed, 28 skipped, 393 subtests passed in 50.94s"
+      "result": "518 passed, 28 skipped, 393 subtests passed in 49.40s"
     },
     {
       "id": "focused_security_codex_bridge_migration",
@@ -152,7 +152,7 @@
       "id": "artifact_cleanup",
       "command": "scripts/audit-test-artifacts.sh",
       "exit_code": 0,
-      "result": "209 candidate files including evidence files; one bounded ignored diagnostic; no candidate media/model/client document"
+      "result": "210 candidate files including evidence files; one bounded ignored diagnostic; no candidate media/model/client document"
     }
   ],
   "runtime": {
@@ -183,23 +183,24 @@
     "publication_metadata_review": "APPROVE: no P0-P3 after canonical metadata, privacy neutralization, and staged receipt verification",
     "ci_trigger_delta_review": "CLEAN: PR events remain covered, main push remains covered, feature-branch duplicate matrix removed",
     "remote_minimum_dependency_fix_review": "CLEAN: minimum is first patched 2026.7.4 and lock resolves 2026.8.19",
-    "remote_ci_failure_repair_review": "CLEAN: npm audit pin scope, IPv4/IPv6 no-reverse-DNS server, TDD regression, and real-render shell quoting reviewed with no P0-P3"
+    "remote_ci_failure_repair_review": "CLEAN: npm audit pin scope, IPv4/IPv6 no-reverse-DNS server, TDD regression, and real-render shell quoting reviewed with no P0-P3",
+    "remote_real_render_diagnostic_review": "CLEAN: fixed stage/code diagnostic, strict final marker, no raw error message or path, Node and Python regressions passed"
   },
   "evidence_files": [
     {
       "path": "docs/screenshots/ui-acceptance-receipt.json",
       "size_bytes": 9552,
-      "sha256": "fd77638c854db5ef9a5539f6d89f472b3eb8213fae76ffdabdf0ec35c49890af"
+      "sha256": "c72bcb2c1bc3d22ba6d87435d4db4c1aaa4a97f5aee7802b6fc52472d7bc55a3"
     },
     {
       "path": "docs/release-readiness.md",
-      "size_bytes": 9797,
-      "sha256": "d8479027551fa7d2b9a107dc85623324553fcd06ace893b03aa66a1b4d54bd9a"
+      "size_bytes": 9804,
+      "sha256": "03c519600166de99b226385b189393e79b2fa306744ee1d79ae7399dd148a1d9"
     },
     {
       "path": "docs/cold-review.md",
-      "size_bytes": 6641,
-      "sha256": "60b2482fa481ab1233a1d71fb6059a8374a65f1b9e7013807643f33154381e49"
+      "size_bytes": 7236,
+      "sha256": "45d16a8a2f8d07c13eeca3749c48a0a6e2f031420880f334ce3d53917f60998d"
     },
     {
       "path": "progress.txt",

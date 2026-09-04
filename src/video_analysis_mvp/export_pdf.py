@@ -8,6 +8,7 @@ import html
 import io
 import json
 import os
+import re
 import tempfile
 import unicodedata
 from collections.abc import Callable
@@ -32,11 +33,27 @@ PDF_RECEIPT_SCHEMA = "pdf-render-receipt/v1"
 MAX_OUTPUT_BYTES = 512 * 1024 * 1024
 MAX_RENDERER_LOG_BYTES = 2 * 1024 * 1024
 DRIVER_PATH = Path(__file__).parent / "templates" / "client" / "render_pdf.cjs"
-DRIVER_SHA256 = "d725a851d56a86684fd26adcdff9a5493c85a0a03207394926cd58e39b7615fc"
+DRIVER_SHA256 = "f9a3992a2f9ab2c835d63122de7766dd1a33ee8d3712a96095a5f44052e9c995"
+_RENDERER_DIAGNOSTIC = re.compile(
+    r"(?:^|\n)RendererDiagnostic:"
+    r"(startup|read-input|launch-browser|open-page|install-network-guard|"
+    r"set-content|load-font|render-pdf|emit-receipt|close-browser):"
+    r"(path-too-long|no-space|permission-denied|browser-executable-missing|"
+    r"browser-launch-failed|target-closed|embedded-font-load-failed|renderer-error):"
+    r"([A-Za-z0-9_.-]{1,64})\Z"
+)
 
 
 class PdfExportError(ValueError):
     pass
+
+
+def _renderer_failure_detail(message: str) -> str:
+    match = _RENDERER_DIAGNOSTIC.search(message)
+    if match is None:
+        return ""
+    stage, code, name = match.groups()
+    return f" [stage={stage}, code={code}, name={name}]"
 
 
 def render_client_html(
@@ -156,8 +173,9 @@ def render_client_pdf(
                 reason = "exceeded its renderer log limit"
             else:
                 reason = "failed"
+            detail = _renderer_failure_detail(message)
             raise PdfExportError(
-                f"Playwright PDF rendering {reason}; no browser or dependency was downloaded"
+                f"Playwright PDF rendering {reason}{detail}; no browser or dependency was downloaded"
             ) from None
         if not raw_pdf.is_file():
             raise PdfExportError("Playwright PDF rendering failed; no browser or dependency was downloaded")
