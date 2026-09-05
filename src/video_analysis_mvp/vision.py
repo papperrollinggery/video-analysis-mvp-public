@@ -806,7 +806,7 @@ def _call_minimax_understand_image(
             "params": {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {},
-                "clientInfo": {"name": "video-analysis-mvp", "version": "0.2.2"},
+                "clientInfo": {"name": "video-analysis-mvp", "version": "0.3.0"},
             },
         },
         {

@@ -8,7 +8,7 @@ Turn a video into a reviewable, shot-level evidence package on your own machine.
 
 Video Evidence Workbench is an open-source, local-first workspace for researchers and builders who need inspectable video data rather than a black-box summary. It creates timecoded shots, keyframes, contact sheets, audio and rhythm data, human-review gates, lineage records, and portable HTML, CSV, Markdown, and JSON outputs.
 
-> Project status: v0.2.2 pre-1.0 release candidate. The deterministic short-video path, persistent run recovery, human review, explicit Finalize, migration, and requested client export passed the local candidate gates. The CI badge is the authoritative remote-build status; live provider contracts remain unverified. Shot boundaries and model annotations are evidence to review, not ground truth.
+> Project status: v0.3.0 pre-1.0 release candidate. The deterministic short-video path, persistent run recovery, human review, explicit Finalize, migration, and requested client export passed the local candidate gates. The CI badge is the authoritative remote-build status; live provider contracts remain unverified. Shot boundaries and model annotations are evidence to review, not ground truth.
 
 ![Running Video Evidence Workbench production workspace with a local synthetic demo](docs/screenshots/workspace-desktop-1440x900.png)
 
@@ -186,6 +186,26 @@ See the [quality metrics and test matrix](docs/quality-metrics.md) for threshold
 ### Let the current Codex task analyze the evidence
 
 No extra provider API key is required when the current Codex task supplies the analysis. Keep the same workflow: local evidence → model observations → human review → Finalize → requested export.
+
+Use **`$video-evidence-workbench`** in this repository, or install the release
+Skill globally for use from any project:
+
+```sh
+python3 -I .agents/skills/video-evidence-workbench/scripts/install.py \
+  --wheel /absolute/video_analysis_mvp-0.3.0-py3-none-any.whl \
+  --extras api --extras export --extras pdf
+```
+
+The explicit installer binds an isolated runtime, preserves the calling
+directory and backs up an older Skill outside discovery. The release contains
+the wheel and self-contained Skill ZIP; see the
+[global installation instructions](docs/releases/v0.3.0.md#global-codex-installation).
+
+For longer breakdowns, `codex next PROJECT --batch-size 12` supplies ordered
+frames and a focused response template; `codex submit PROJECT --result FILE`
+checkpoints each batch and applies only when the complete scope is present.
+Interrupted work resumes from the next missing shot. See the
+[batch and recovery contract](docs/codex-native-analysis.md#bounded-batches-in-the-cli-and-project-skill).
 
 ```bash
 .venv/bin/analyze-video --workspace ./analysis-projects codex prepare example-video
@@ -391,7 +411,7 @@ sh scripts/install-smoke-test.sh
 sh scripts/benchmark-audio.sh
 sh scripts/test-client-exports.sh
 sh scripts/audit-test-artifacts.sh
-sh scripts/verify-candidate-receipt.sh v0.2.2
+sh scripts/verify-candidate-receipt.sh v0.3.0
 .venv/bin/analyze-video benchmark --output ./benchmark-output
 npm --prefix frontend run test:integration
 npm --prefix frontend run test:e2e

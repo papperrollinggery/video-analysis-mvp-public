@@ -366,7 +366,8 @@ class ProfileOutputBoundaryTest(unittest.TestCase):
             paths.ensure()
             media = _media(paths, AnalysisProfile.festival)
 
-            def write_frames(_video: Path, directory: Path, shots: list[Shot]) -> None:
+            def write_frames(_video: Path, directory: Path, shots: list[Shot], *, frame_rate: float | None = None) -> None:
+                self.assertEqual(media.frame_rate, frame_rate)
                 for shot in shots:
                     for name in shot.frame_refs:
                         (directory / name).write_bytes(b"frame")

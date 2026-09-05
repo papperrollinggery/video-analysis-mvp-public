@@ -1,0 +1,162 @@
+{
+  "schema_id": "vew-codex-optimization-verification/v1",
+  "verified_at_utc": "2026-09-05T12:38:35.322960+00:00",
+  "scope": "Local uncommitted candidate; not remote CI, public release, or human review",
+  "baseline_git_head": "501a33109e1ecb4b01bcaa5ef6aeaadf1c71010d",
+  "changed_code_test_skill_sha256": {
+    ".agents/skills/video-evidence-workbench/SKILL.md": "64f41d23ce7aedfdcd2314dee2a4da933d4df34045ea48ebfbf75be3e376a12d",
+    ".agents/skills/video-evidence-workbench/agents/openai.yaml": "3c8d7920ac0c463a5ea18dfc8493381458aaed572d13326fc35809a5bddcb5aa",
+    "src/video_analysis_mvp/artifacts.py": "756692c089e9ffd292d4a99c44c07c4714bddc4dd3635ad47db2af5f36af1457",
+    "src/video_analysis_mvp/audio.py": "3ad6f1d59c93424694d00c3c16e783162a31654de9975bd5876b40f37cf3bb14",
+    "src/video_analysis_mvp/cli.py": "45ef6f30a6b0dd93a9b79c4b6ffe75be5bf8dd7925c2dbf2496405b71a3f54e5",
+    "src/video_analysis_mvp/codex_analysis.py": "745c6f124744bfdec07be865995c684d622139494c3372644c21e1f43fdd7700",
+    "src/video_analysis_mvp/codex_batches.py": "c893883d2995d91e521c5be3a2055d866a83acaae8f68e82853869efa7a5fc5b",
+    "src/video_analysis_mvp/delivery.py": "73d66268fa40ad56f30f86c6543bb2a5104ff922e4731d9ac511ea1442fc2b02",
+    "src/video_analysis_mvp/media.py": "9de3c5d5fb3e7c504020ae01a182c95e714cff5598aac8892fc2f67ff4ce6891",
+    "src/video_analysis_mvp/pipeline.py": "a6e756c3b5fd490aaeb3575f5a8af2f8ef2f37e3db221c3982a59d0423817e96",
+    "src/video_analysis_mvp/readiness.py": "724fd6427041fd1a04c062448cb2f0c445166e61aa977ad860ea9270e98f232a",
+    "src/video_analysis_mvp/visual.py": "64c5689d90f91934b7bfc7d07f6a0d405695945733afa710047b16e7868dcec6",
+    "tests/test_audio_providers.py": "7f27c4bd5f22e68a163d2c5f72f8ca802f6a305cf4f409d699685270e6717ba5",
+    "tests/test_codex_batches.py": "38ce2f03c8393b4f9a0cfd61db78b046bf856b809bc98785a0daff8545f0c313",
+    "tests/test_delivery_coverage.py": "e06918919d197d1b4782b3ebb970ec86190e462632f56bba07784c9f940051f1",
+    "tests/test_profile_outputs.py": "bbf1168b25d1a5f7006b138dbc6e6fdc0a10b4972cece5193ff19e5198c0d541",
+    "tests/test_transaction_concurrency.py": "46f7f0431ac0c6c218cc33793eb7749277d4f217d19f0d30f1476373b2d6504a",
+    "tests/test_video_without_audio.py": "8ce36fd4e67666786be3f2198c6e18c2dcfe90a2794c2af7e6642d1409efd0b1",
+    "tests/test_visual_detection.py": "d17c7a9601bfa6a682791df1b0a8f9e9a0820e48e0a56eb30d035f5d79be7931"
+  },
+  "python_suite": {
+    "status": "passed",
+    "test_count": 572,
+    "skipped": 0,
+    "elapsed_seconds": 108.485,
+    "python": "3.13.13",
+    "required_pdf_runtime": true,
+    "required_office_runtime": true,
+    "log_sha256": "da9851f28188e74614082ef73d2cecb70d78589800767f2c46a54e94d0d6dc4a"
+  },
+  "smoke_checks": {
+    "package": {
+      "status": "passed",
+      "log_sha256": "0c00300cb5639dade7b6ea17d364124e6847a93b6f622186f156f5bdfcf66675"
+    },
+    "demo": {
+      "status": "passed",
+      "log_sha256": "e34ce67854f465d31629f70bd43ba39754e8bec40df2015b5a5845ca83f1c84c"
+    },
+    "api": {
+      "status": "passed",
+      "log_sha256": "3a09629da11643cb3420e1d0f3a45ae4ee08b1c3a63243cb54b8d08d87a3d745"
+    },
+    "review_finalize": {
+      "status": "passed",
+      "log_sha256": "804e9d13e2f58f34aa6f50012e94dc1ca2d553e4ee0ba1398417a11a67b1d88b"
+    },
+    "clean_wheel_install": {
+      "status": "passed",
+      "log_sha256": "56b364310dea989ee0ddf727a2aee27e42f977559cffa0df7247605e64764bd9"
+    }
+  },
+  "frontend": {
+    "build": "passed",
+    "origin_isolation": "passed",
+    "pdf_driver_cases": 7,
+    "browser_e2e": "passed",
+    "viewports": [
+      "1440x900",
+      "900x1000",
+      "390x844"
+    ],
+    "backend_for_browser_e2e": "controlled synthetic API fixtures"
+  },
+  "static_checks": {
+    "ruff": "passed",
+    "bandit": "passed",
+    "skill_quick_validate": "passed",
+    "git_diff_check": "passed"
+  },
+  "benchmark": {
+    "status": "passed",
+    "summary": {
+      "case_count": 6,
+      "functional_passed": 6,
+      "functional_failed": 0,
+      "accuracy_gated": 5,
+      "accuracy_gated_passed": 5,
+      "observational": 1,
+      "performance_passed": 6,
+      "failed": 0
+    },
+    "audio_case_count": 5,
+    "audio_passed_count": 5,
+    "scope": {
+      "fixtures": "deterministically generated from FFmpeg filters; no external media assets",
+      "redistribution": "CC0-1.0",
+      "asr_accuracy": "not_run; no redistributable speech recording or explicit local model configured",
+      "semantic_voice_music_sfx_accuracy": "not_run; deterministic baseline preserves unknown identity",
+      "external_vision": "not invoked"
+    }
+  },
+  "context_payload_measurement": {
+    "fixture_shots": 257,
+    "batch_shots": 12,
+    "full_request_bytes": 756638,
+    "batch_packet_bytes": 22286,
+    "reduction_percent": 97.1,
+    "scope": "serialized context payload; not token billing or semantic accuracy"
+  },
+  "historical_document_comparison": {
+    "shots_before": 12,
+    "shots_after": 19,
+    "total_shots": 19,
+    "reverse_markdown_bytes_before": 37642,
+    "reverse_markdown_bytes_after": 22648,
+    "remake_markdown_bytes_before": 4606,
+    "remake_markdown_bytes_after": 6954,
+    "original_project_modified": false,
+    "scope": "document coverage/size, not a fresh semantic reanalysis"
+  },
+  "skill_discovery": {
+    "fresh_process": true,
+    "method": "skills/list",
+    "forceReload": true,
+    "name": "video-evidence-workbench",
+    "scope": "repo",
+    "enabled": true,
+    "errors": []
+  },
+  "actual_current_task_workflow": {
+    "status": "applied",
+    "request_id": "046708f3b0434995828d6c580f74b70f032deff291ec7c1ff47e89301b06a83d",
+    "shot_count": 2,
+    "batch_size": 1,
+    "source_sha256": "0cfff65403b64130507f388c7b7fa60c4d26814e600dc2845b86619936498a84",
+    "master_is_original": true,
+    "original_has_audio_stream": false,
+    "wav_exists": false,
+    "agent_submission_bound": true,
+    "model_identity_verified": false,
+    "human_review": "required",
+    "professional_export_allowed": false,
+    "native_frames_inspected": 6,
+    "semantic_correction": "Unsupported split-square claim removed after reviewing the exact bound frame and resubmitting through native workflow",
+    "early_synthetic_audio_carrier": "not_adopted"
+  },
+  "independent_review": {
+    "status": "no_remaining_actionable_blocker_in_reviewed_scope",
+    "reviewed": [
+      "native request/receipt integrity and compatibility",
+      "caught commit rollback",
+      "mixed human and model records",
+      "short CFR video extraction",
+      "no-audio stream path"
+    ]
+  },
+  "limitations": {
+    "fresh_codex_cli_model_execution": "TOOL_BLOCKED: local codex exec rejects the configured model because a newer Codex version is required; current-host execution and fresh catalog discovery were verified separately",
+    "external_provider_accuracy": "not_run",
+    "asr_accuracy": "not_run",
+    "general_semantic_accuracy": "not_established_by_synthetic_tests",
+    "exact_vfr_pts": "not_verified",
+    "power_loss_recovery": "fail_closed; automatic recovery not claimed"
+  }
+}

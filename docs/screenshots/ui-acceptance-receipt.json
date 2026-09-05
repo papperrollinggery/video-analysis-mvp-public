@@ -51,9 +51,9 @@
     }
   },
   "reviewed_source_candidate": {
-    "file_count": 211,
-    "sha256": "f4bedd8e1a70c6df56525f573aeb116bc8dbf4ac27ce02f76311ac2bc338a90f",
-    "binding_refreshed_at": "2026-09-04T21:55:30+08:00",
+    "file_count": 226,
+    "sha256": "184e95ef6804fcd48f9394226e905fd887f8ea05dc76aa616e8ea5e508bb04c9",
+    "binding_refreshed_at": "2026-09-05T14:06:55.553935+00:00",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -62,7 +62,7 @@
       "docs/screenshots/ui-acceptance-receipt.json",
       "progress.txt"
     ],
-    "scope_note": "Execution evidence files are excluded to avoid self-reference and are hashed separately by the mature-candidate receipt. Tracked and non-ignored untracked product files, tests, public docs, generated frontend assets, and all six screenshots are included."
+    "scope_note": "Product files bind v0.3.0. Frontend bytes are unchanged; original screenshot capture dates are retained. The five execution-evidence files are excluded from the product hash and the other four are separately bound by the mature receipt."
   },
   "frontend_source": {
     "tree_path": "frontend/src",

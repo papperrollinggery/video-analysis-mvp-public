@@ -59,6 +59,7 @@ def analyze_visual(media: CanonicalMediaPackage, paths: ProjectPaths, interval_s
         scenes,
         media.analysis_profile,
         interval_seconds,
+        media.frame_rate,
     )
     return shots, scenes
 
@@ -70,6 +71,7 @@ def _stage_and_commit_visual_generation(
     scenes: list[Scene],
     profile: AnalysisProfile | str,
     interval_seconds: float,
+    frame_rate: float | None = None,
 ) -> None:
     ensure_output_directory(paths.assets, root=paths.root)
     with tempfile.TemporaryDirectory(prefix=".visual-stage-", dir=paths.assets) as directory:
@@ -78,7 +80,7 @@ def _stage_and_commit_visual_generation(
         staged_paths.ensure()
         staging_keyframes = staged_paths.keyframes
         staged_contact_sheet = staged_paths.assets / "contact_sheet.jpg"
-        _extract_shot_frames(video_path, staging_keyframes, shots)
+        _extract_shot_frames(video_path, staging_keyframes, shots, frame_rate=frame_rate)
         # FFmpeg 8 no longer flushes an incomplete tile at EOF.  Request a
         # complete 3x4 set of evenly distributed samples for every clip.
         duration_seconds = max((shot.end_time for shot in shots), default=interval_seconds)
@@ -605,9 +607,9 @@ def _build_contact_sheet(
 
 
 def _detect_shot_segments(video_path: Path, media: CanonicalMediaPackage) -> tuple[list[tuple[float, float, str]], str]:
-    duration = max(media.duration_seconds, 0.1)
+    duration = media.duration_seconds if media.duration_seconds > 0 else 0.1
     scene_times = _scene_change_times(video_path, duration)
-    if len(scene_times) < 2 and duration > 6:
+    if not scene_times and duration > 6:
         return _fallback_segments(media), "fixed_cadence"
     boundaries = [0.0, *scene_times, duration]
     segments = [(boundaries[index], boundaries[index + 1], "high") for index in range(len(boundaries) - 1)]
@@ -791,19 +793,48 @@ def _story_beat(index: int, count: int, profile: str) -> str:
     return "heuristic_unverified:payoff"
 
 
-def _extract_shot_frames(video_path: Path, keyframes_dir: Path, shots: list[Shot]) -> None:
+def _extract_shot_frames(
+    video_path: Path, keyframes_dir: Path, shots: list[Shot], *, frame_rate: float | None = None
+) -> None:
     ensure_output_directory(keyframes_dir)
     for shot in shots:
-        start = min(shot.end_time, shot.start_time + 0.1)
-        mid = shot.start_time + max(shot.duration, 0.1) / 2
-        end = max(shot.start_time, shot.end_time - 0.1)
+        span = shot.end_time - shot.start_time
+        if span <= 0:
+            raise ValueError(f"Shot {shot.shot_id} must have a positive duration for frame extraction")
+        if frame_rate is not None and math.isfinite(frame_rate) and frame_rate > 0:
+            sample_times = _nominal_frame_grid_sample_times(shot, frame_rate)
+        else:
+            margin = min(0.1, span / 4)
+            sample_times = [
+                shot.start_time + margin,
+                shot.start_time + span / 2,
+                shot.end_time - margin,
+            ]
         frame_times = [
-            (shot.frame_refs[0], start),
-            (shot.primary_frame_ref, mid),
-            (shot.frame_refs[-1], end),
+            (shot.frame_refs[0], sample_times[0]),
+            (shot.primary_frame_ref, sample_times[1]),
+            (shot.frame_refs[-1], sample_times[2]),
         ]
         for filename, seconds in frame_times:
             _extract_frame_at(video_path, keyframes_dir / filename, seconds)
+
+
+def _nominal_frame_grid_sample_times(shot: Shot, frame_rate: float) -> list[float]:
+    """Choose samples from the nominal CFR grid without reaching the shot end."""
+    epsilon = 1e-9
+    first_index = math.ceil(shot.start_time * frame_rate - epsilon)
+    last_index = math.ceil(shot.end_time * frame_rate - epsilon) - 1
+    if last_index < first_index:
+        raise ValueError(
+            f"Shot {shot.shot_id} contains no nominal frame at the media frame rate; "
+            "cannot extract an in-range frame without crossing a boundary"
+        )
+    margin = min(0.1, (shot.end_time - shot.start_time) / 4)
+    targets = (shot.start_time + margin, (shot.start_time + shot.end_time) / 2, shot.end_time - margin)
+    return [
+        min(last_index, max(first_index, math.floor(target * frame_rate + epsilon))) / frame_rate
+        for target in targets
+    ]
 
 
 def _extract_frame_at(video_path: Path, output_path: Path, seconds: float) -> None:

@@ -1,5 +1,21 @@
 # Mature candidate independent cold review
 
+## v0.3.0 global Skill and workflow delta
+
+The core workflow received independent reviews for request/receipt compatibility,
+commit failure recovery, protected human rows, short CFR extraction and the
+video-only path. The global installer received a separate review; the first pass
+rejected bootstrap dependency, same-wheel Skill update, relative binding,
+runtime-info false-success and copied-venv startup problems. Those cases were
+fixed and independently rechecked. The actual installed-runtime audit then found
+an older ensurepip pip; the installer now upgrades only its managed runtime
+before dependency installation.
+
+The final version-scoped verdict, source hashes, frozen product digest and local
+verification are recorded in `docs/evidence/mature-candidate-receipt.json`.
+Exact pushed/tagged CI and publication are external readbacks. Earlier-version
+sections below are historical evidence, not v0.3.0 approval.
+
 ## v0.2.2 release-integrity delta
 
 Status: **APPROVE**. Independent review found no remaining P0, P1, P2 or P3

@@ -264,15 +264,23 @@ class VisionCompareAndSwapTest(unittest.TestCase):
                 return _provider_payload(threading.current_thread().name)
 
             def run() -> None:
-                results.append(self.run_with_provider(paths, analyze))
+                results.append(annotate_project_with_vision(paths, provider="openai"))
 
             threads = [threading.Thread(target=run, name=f"provider-{index}") for index in range(2)]
-            for thread in threads:
-                thread.start()
-            for thread in threads:
-                thread.join(8)
+            original_path = os.environ.get("PATH")
+            # Environment and module patches are process-global. Overlapping
+            # per-thread patches can restore each other's temporary values.
+            with (
+                patch.dict(os.environ, {"OPENAI_API_KEY": "test-key"}, clear=True),
+                patch("video_analysis_mvp.vision.analyze_frame", analyze),
+            ):
+                for thread in threads:
+                    thread.start()
+                for thread in threads:
+                    thread.join(8)
 
             self.assertTrue(all(not thread.is_alive() for thread in threads))
+            self.assertTrue(os.environ.get("PATH") == original_path, "concurrent fixture changed PATH")
             self.assertEqual(["success", "warning"], sorted(result.status for result in results))
             final = Shot.model_validate(load_json(paths.data / "shots.json")[0])
             self.assertIn(final.content_summary, {"provider-0", "provider-1"})

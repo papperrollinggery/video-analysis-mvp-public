@@ -1,11 +1,11 @@
 {
   "schema_id": "vew-mature-candidate-receipt/v1",
-  "status": "v0.2.2_release_candidate_pre_push",
-  "recorded_at": "2026-09-04T21:55:30+08:00",
+  "status": "v0.3.0_release_candidate_pre_push",
+  "recorded_at": "2026-09-05T14:06:55.553935+00:00",
   "candidate": {
-    "scope": "local mature candidate only",
-    "file_count": 211,
-    "sha256": "f4bedd8e1a70c6df56525f573aeb116bc8dbf4ac27ce02f76311ac2bc338a90f",
+    "scope": "Local v0.3.0 candidate; exact commit/tag CI and publication are independent external gates",
+    "file_count": 226,
+    "sha256": "184e95ef6804fcd48f9394226e905fd887f8ea05dc76aa616e8ea5e508bb04c9",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -18,140 +18,120 @@
       "repository": "https://github.com/papperrollinggery/video-analysis-mvp-public",
       "repository_verified_at": "2026-09-04",
       "local_verification_commit": null,
-      "boundary": "This receipt binds the pre-commit local candidate. GitHub records the later branch, merged commit, checks and release tag separately."
+      "boundary": "This receipt binds the pre-commit local product tree. GitHub separately records the subsequent main commit, tag, CI and release. No old-version publication or approval is inherited."
     },
-    "publication_metadata_delta": "v0.2.2 integrity correction: precise tagged-tree wording, API-authoritative release immutability and version metadata; no analysis-workflow expansion."
+    "publication_metadata_delta": "v0.3.0: global wheel-bound Codex Skill, resumable multi-frame analysis and input/delivery correctness fixes."
   },
   "verification": [
     {
       "id": "python_full",
-      "command": ".venv/bin/python -m pytest -q tests",
+      "command": "python -m unittest discover -v with explicit PDF and Office runtimes",
       "exit_code": 0,
-      "result": "520 passed, 29 skipped, 393 subtests passed in 48.18s after the version-scoped review approval was bound"
+      "result": "594 tests passed, 0 skipped in 104.626s on the final code/metadata candidate with real PDF and Office runtimes",
+      "log_sha256": "0f43f02f0909125f154aff1e62d7ac012c2932d4ee1fd2b4f30e206e277cf3fa"
     },
     {
-      "id": "focused_security_codex_bridge_migration",
-      "command": ".venv/bin/python -m pytest -q tests/test_bridgedeck_compatibility.py tests/test_codex_analysis.py tests/test_migration.py tests/test_media_security.py tests/test_provider_security.py tests/test_security_boundaries.py tests/test_vision_receipts.py",
+      "id": "global_installer",
+      "command": "python -m unittest tests.test_skill_installation -q",
       "exit_code": 0,
-      "result": "110 passed, 84 subtests passed in 11.80s"
+      "result": "22 passed including two-component pip versions, upgrade ordering, actual venv startup, repair, rollback and cwd/import isolation"
     },
     {
-      "id": "legacy_compatibility_delta",
-      "command": ".venv/bin/python -m pytest -q tests/test_web.py tests/test_report_generation.py tests/test_workspace_api_persistence.py",
+      "id": "global_runtime_and_usage",
+      "command": "installed Skill wrapper runtime-info and original-video run / next / submit / status / prepare from a separate cwd",
       "exit_code": 0,
-      "result": "59 passed, 29 subtests passed in 6.70s"
+      "result": "Actual package 0.3.0 from isolated site-packages; 2/2 model rows applied; relative workspace preserved; PYTHONPATH decoy ignored; no source audio stream and no generated WAV"
     },
     {
-      "id": "ruff",
-      "command": "uvx --offline --from ruff==0.15.22 ruff check src tests",
+      "id": "dependency_audits",
+      "command": "npm audit --audit-level=high; pip-audit over the test environment and installed global runtime",
+      "exit_code": 0,
+      "result": "No known vulnerabilities: npm clean; installed runtime 20 queryable packages audited, project distribution itself skipped as not present on PyPI and separately code-reviewed; managed pip 26.2.1"
+    },
+    {
+      "id": "static",
+      "command": "ruff check src tests .agents/skills/video-evidence-workbench/scripts; bandit -q -r src .agents/skills/video-evidence-workbench/scripts -ll",
       "exit_code": 0,
       "result": "All checks passed"
-    },
-    {
-      "id": "bandit",
-      "command": "uvx --offline --from bandit==1.9.4 bandit -q -r src -ll",
-      "exit_code": 0,
-      "result": "No medium or high finding"
-    },
-    {
-      "id": "python_dependency_audit",
-      "command": "uvx --offline --from pip-audit==2.10.1 pip-audit --path <current-venv-site-packages> --skip-editable --progress-spinner off",
-      "path_redacted": true,
-      "exit_code": 0,
-      "result": "No known vulnerabilities found"
-    },
-    {
-      "id": "frontend_dependency_audit",
-      "command": "npm --prefix frontend audit --audit-level=high",
-      "exit_code": 0,
-      "result": "found 0 vulnerabilities",
-      "boundary": "The registry advisory endpoint returned an actual clean result; unavailable endpoint warnings are not clean-audit evidence."
     },
     {
       "id": "frontend",
       "commands": [
         "npm --prefix frontend run build",
         "npm --prefix frontend run test:integration",
-        "npm --prefix frontend run test:e2e",
-        "scripts/verify-frontend-assets.sh frontend/dist src/video_analysis_mvp/frontend_dist"
+        "npm --prefix frontend run test:e2e"
       ],
       "exit_code": 0,
-      "result": "1703 modules; 4 packaged files match; generate 2, cancel 1, save 1, delete 1; 1440/900/390 no overflow or small targets; 3px focus; no unexpected console problem"
+      "result": "Production assets match the existing four-file mirror; origin isolation and desktop/tablet/mobile browser acceptance passed"
     },
     {
-      "id": "real_client_render_matrix",
-      "command": "env <bundled-python-and-explicit-local-pdf-runtime> scripts/test-client-exports.sh",
-      "path_redacted": true,
+      "id": "wheel_install",
+      "command": "scripts/install-smoke-test.sh",
       "exit_code": 0,
-      "result": "71 tests passed in 63.015s; bounded diagnostics, private browser-temp cleanup, real XLSX/PDF and LibreOffice openability included"
+      "result": "Clean candidate, wheel, migration and exact served frontend asset parity passed"
     },
     {
-      "id": "clean_install_and_migration",
-      "command": "env npm_config_offline=true PYTHON=<bundled-workspace-python> scripts/install-smoke-test.sh",
-      "path_redacted": true,
+      "id": "core_acceptance",
+      "command": "package/demo/API/review smokes and synthetic benchmark",
       "exit_code": 0,
-      "result": "215-file release candidate; fresh build and wheel; installed migrate dry-run/apply; packaged and served frontend byte parity; npm 0 vulnerabilities",
-      "boundary": "Frontend package acquisition used the exact lockfile and existing local cache; uncached remote first install was not proven."
+      "result": "Passed on the optimized core; exact source-media, multi-frame correction, no-audio path and caught commit failure are included in current regression coverage"
     },
     {
-      "id": "pipeline_smokes",
-      "commands": [
-        "scripts/smoke-test.sh",
-        "scripts/demo-smoke-test.sh",
-        "sh scripts/api-smoke-test.sh",
-        "scripts/review-workflow-smoke-test.sh"
-      ],
+      "id": "skill_discovery",
+      "command": "fresh codex app-server skills/list(forceReload=true) from a directory outside the repository",
       "exit_code": 0,
-      "result": "package, real synthetic demo, synchronous/persistent API and blocked-review-finalize-stale-refinalize lifecycle passed"
+      "result": "Exactly one enabled user-scope video-evidence-workbench Skill found"
     },
     {
-      "id": "product_benchmark",
-      "command": "run_synthetic_benchmark(<temporary-directory>)",
-      "exit_code": 0,
-      "result": "6/6 functional video, 5/5 accuracy-gated, one fade observational; elapsed 5.646s; Python-process peak RSS 52101120 bytes"
-    },
-    {
-      "id": "audio_benchmark",
-      "command": "scripts/benchmark-audio.sh",
-      "exit_code": 0,
-      "result": "5/5 generated PCM cases in 0.071s; ASR and semantic identity accuracy not_run"
-    },
-    {
-      "id": "documentation_metadata",
-      "commands": [
-        "bounded local Markdown file-link resolver",
-        "Python json/tomllib parser over the Git candidate",
-        "Ruby YAML.safe_load over YAML/CFF candidate files"
-      ],
-      "exit_code": 0,
-      "result": "Checked candidate-local Markdown links resolve; 14 JSON, one TOML and six YAML/CFF files parse; release metadata contract passed"
-    },
-    {
-      "id": "artifact_cleanup",
+      "id": "artifact_policy",
       "command": "scripts/audit-test-artifacts.sh",
       "exit_code": 0,
-      "result": "215 candidate files including evidence files; one bounded ignored diagnostic; no candidate media/model/client document"
+      "result": "No private/generated media, client documents or maintainer path in the release candidate"
+    },
+    {
+      "id": "installed_global_benchmark",
+      "command": "globally installed wrapper benchmark on synthetic fixtures",
+      "exit_code": 0,
+      "result": {
+        "case_count": 6,
+        "functional_passed": 6,
+        "functional_failed": 0,
+        "accuracy_gated": 5,
+        "accuracy_gated_passed": 5,
+        "observational": 1,
+        "performance_passed": 6,
+        "failed": 0
+      },
+      "audio_quality_passed": 5
+    },
+    {
+      "id": "actual_release_wheel_parity",
+      "command": "byte-compare final clean-built release wheel against every current src/video_analysis_mvp file; reinstall that same wheel globally",
+      "exit_code": 0,
+      "result": "54 package files match exactly, four frontend files, zero stale/missing files; clean-wheel runtime retains the applied global test request"
     }
   ],
   "runtime": {
-    "real_export_python": "3.12.14",
-    "benchmark_python": "3.13.13",
-    "platform": "macOS 26.6.2 arm64",
-    "browser": "Google Chrome 152.0.7977.77 via Playwright",
-    "ui_browser_version": "152.0.7977.65",
+    "python_full": "3.13.13",
+    "global_package_version": "0.3.0",
+    "global_runtime_kind": "wheel-installed isolated user-local venv",
+    "global_extras": [
+      "api",
+      "export",
+      "pdf"
+    ],
+    "wheel_sha256": "f1be58673acdf482bd3c35f808d7c757f9a753170b8c2b2d8d27ba9952ca6fd3",
+    "skill_sha256": "66ca65b29559e359ac75b7a88f89d709af614eeb70a69df385524fac8e901a27",
+    "pip": "26.2.1",
     "pdf_font": "Noto Sans CJK SC",
-    "pdf_font_sha256": "2b1304a1a2d6b811a38c2c90a2be503cbac0bfbf4d8b0e6a6a598146564a61ad",
-    "office_check": "LibreOffice headless XLSX-to-PDF"
+    "office_check": "LibreOffice headless XLSX-to-PDF",
+    "platform": "macOS arm64"
   },
   "security": {
-    "standard_scan_id": "bfb9a48c-8668-4a1d-a7ca-cfc4f69bb1d1",
-    "baseline_snapshot": "codex-security-snapshot/v1:sha256:4a2657ea5d232e775280b79501279d442501eb7fa71603c82040a6ca47637519",
-    "baseline_findings": {
-      "medium": 3,
-      "low": 2
-    },
-    "post_fix_state": "Targeted regressions and independent delta review passed; the scan ID remains the pre-remediation discovery baseline, not a fresh final snapshot.",
-    "tac_access": "unverified: USER_NOT_LOGGED_IN"
+    "source_scan": "Bandit medium/high findings: none",
+    "dependency_audits": "No known vulnerabilities after managed-pip upgrade",
+    "comprehensive_security_scan": false,
+    "pip_advisory": "https://github.com/advisories/GHSA-qwm4-qh6w-59xr"
   },
   "review": {
     "v0.2.0_history": {
@@ -176,38 +156,64 @@
       "status": "approved",
       "verdict": "APPROVE: no remaining P0-P3; 211-file product digest, four evidence bindings, time-scoped v0.2.1 correction, API/attestation state, draft-first immutable-release strategy and version metadata independently verified.",
       "boundary": "No earlier verdict is inherited. Exact v0.2.2 PR CI, tagged-tree CI, publication and post-publication API/attestation readback remain external gates."
+    },
+    "v0.3.0": {
+      "status": "approved",
+      "verdict": "APPROVE: independent frozen-candidate review matched all 226 product files, four execution-evidence bindings, the six-file global Skill/ZIP, and all 54 clean wheel package files including exactly four frontend assets; no remaining actionable blocker in the reviewed scope.",
+      "installer_sha256": "ccfd4c760d1a967fe83590e80aa2ad44995837033d79c0aac6c3848b1cb641a8",
+      "wrapper_sha256": "45ac74ba91faa79dd36d40fb2851bce5b7c8d647a71cc4962e1dfbde10ea7a94",
+      "boundary": "No prior version verdict is inherited. Exact main/tag checks and release publication remain external gates.",
+      "frozen_candidate_sha256": "184e95ef6804fcd48f9394226e905fd887f8ea05dc76aa616e8ea5e508bb04c9"
     }
   },
   "evidence_files": [
     {
-      "path": "docs/screenshots/ui-acceptance-receipt.json",
-      "size_bytes": 9552,
-      "sha256": "d709a79a16b7bea66052d1a19c1262f4bcaf07ac57ff332f1030af97db052ef2"
+      "path": "docs/cold-review.md",
+      "size_bytes": 12336,
+      "sha256": "c3060d9f2ef69f1c2fe15f6480fae590153dcc7101a0d32ca7d9f12608fd0f89"
     },
     {
       "path": "docs/release-readiness.md",
-      "size_bytes": 5744,
-      "sha256": "5fc730e52d353136186b2ce3be6f10bd682efc44fed5f9f715eb6fa6c73158ef"
+      "size_bytes": 2948,
+      "sha256": "266083aeb22e8b7f2e97214680782e59a5ac3f2cb28e30fb7dc2c7d487950193"
     },
     {
-      "path": "docs/cold-review.md",
-      "size_bytes": 11414,
-      "sha256": "650c9a76c8eae90a6ba5aa54fc352b07967dabd52e6eda66f1c25725567c7dbb"
+      "path": "docs/screenshots/ui-acceptance-receipt.json",
+      "size_bytes": 9541,
+      "sha256": "f0eec50f7241d9d5a69f21e620de13d96ff0675e2011121e92670cea23430d46"
     },
     {
       "path": "progress.txt",
-      "size_bytes": 28226,
-      "sha256": "2a1431bd3010493647da71d3f6dbd03746ca786b0e42d689039298d29afdaa21"
+      "size_bytes": 28584,
+      "sha256": "46288291c33465dd583ca11fd203f9851daffe04b5908f7509ef912eb5dd0f44"
     }
   ],
   "known_limits": [
-    "Trusted-operator URL ingest is not an SSRF sandbox because downloader redirects and later DNS resolution remain external boundaries.",
-    "Provider and BridgeDeck reads do not have a separate monotonic total-response deadline.",
-    "Live OpenAI, MiniMax and BridgeDeck inference is unverified; current Codex smoke records model identity as unverified and requires human review.",
-    "ASR accuracy and semantic VO/music/SFX identity accuracy are not_run.",
-    "Windows, remote CI for a specific revision, release state and adoption are outside this local receipt and must be read from GitHub.",
-    "DeepSeek Harness was not used and is not a project gate."
+    "Live external vision/audio providers, general ASR and semantic accuracy are unverified.",
+    "Model proposals do not constitute human review; the actual current task is not a verified model-identity receipt.",
+    "CFR sampling uses a nominal frame grid; exact VFR PTS and general storyboard coverage are not certified.",
+    "Caught commit failures roll back; SIGKILL or power loss remains fail-closed without an automatic recovery claim.",
+    "Windows and package-registry/hosted-service publication are not part of this release.",
+    "Codex CLI model startup was host-version blocked; current-host Skill use and fresh global discovery were verified separately."
   ],
   "self_hash": null,
-  "self_hash_note": "This receipt cannot hash itself. Its evidence-file hashes are verified independently after final review updates."
+  "self_hash_note": "This receipt cannot hash itself. Its evidence-file hashes are verified independently after final review updates.",
+  "global_usage": {
+    "request_id": "504ca54ea63d1a41048935755f8015d17f0c49051b6767d78348de4aad4d05ff",
+    "scope": "separate temporary cwd using the globally installed Skill",
+    "source_video_only": true,
+    "original_wav_absent": true,
+    "model_identity_verified": false,
+    "review_required": true
+  },
+  "distribution_assets": {
+    "video_analysis_mvp-0.3.0-py3-none-any.whl": {
+      "sha256": "f1be58673acdf482bd3c35f808d7c757f9a753170b8c2b2d8d27ba9952ca6fd3",
+      "size_bytes": 427238
+    },
+    "video-evidence-workbench-skill-0.3.0.zip": {
+      "sha256": "d0682beba1a7ea5811fe7c99548eeaf3e33eeca257af77b8e380ad561e356c27",
+      "size_bytes": 12686
+    }
+  }
 }

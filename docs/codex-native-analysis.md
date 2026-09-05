@@ -35,15 +35,42 @@ The browser's existing Codex panel exposes the same prepare/apply actions. It do
 
 ## Evidence request
 
-One project-relative `data/codex_analysis_request.json` stores the current request. Its deterministic ID binds the protocol/guide version, project/profile, media and visual/audio generations, selected shot snapshots and validated frame digests. Repeated prepare does not create timestamped copies. Human-authored and rejected shots are excluded and reported explicitly.
+One project-relative `data/codex_analysis_request.json` stores the current request. Its deterministic ID binds the protocol/guide version, project/profile, media and visual/audio generations, selected shot snapshots and validated frame digests. Repeated prepare preserves an already-applied, still-valid request and receipt. Use CLI `prepare --refresh` only to start an intentional reanalysis. Human-authored and rejected shots are excluded and reported explicitly.
+
+New requests use `codex-analysis-request/v2`, guide version 2, and include the visual generation's ordered supporting frames as well as the primary frame. V1 prepared requests and applied receipts remain readable and verifiable; a normal prepare does not invalidate a valid v1 submission. Frame order is known, but legacy extraction has no recorded exact sample timestamps. Do not invent them from filenames. Response schema remains `codex-analysis-response/v1`.
 
 The request contains controlled instructions separately from untrusted evidence strings. It provides exact frame paths, timecodes, shot IDs, current audio-evidence references, and the response schema. A contact sheet is for orientation, not a substitute for inspecting required frame inputs. Missing audio understanding must remain unknown; an image cannot prove music, voice-over, dialogue, or sound effects.
+
+For a source with no audio stream, the local pipeline verifies that fact from the bound media, leaves the WAV absent, and emits empty legacy audio records. The native request binds `audio_wav.status=absent` and exposes `audio_evidence.wav=null`. No synthetic silence is added; a missing WAV for a source that actually has audio is still an error.
 
 ## Analysis submission and provenance
 
 The response identifies the current request and contains exactly one structured analysis for every selected shot. It cannot set source media, timecodes, frame paths, review status, `annotation_source`, or a claimed verified model identity. Visual observations reuse `validate_vision_payload()` and the existing shot fields. Audio evidence remains tied to the current canonical audio timeline and shot associations; this adapter cannot rewrite or invent those source records.
 
 Submitted response JSON is limited to 1 MiB across CLI and HTTP. Duplicate JSON keys are rejected instead of silently selecting one value. Receipt verification binds the normalized submitted analysis and current media/visual/audio evidence; a changed WAV or incomplete submission metadata must not retain a verified analysis status.
+
+## Bounded batches in the CLI and project Skill
+
+Invoke `$video-evidence-workbench` in a Codex task. The maintained source entrypoint is `.agents/skills/video-evidence-workbench/SKILL.md`; the explicitly installed global copy uses a wheel-bound isolated runtime from any project. Its wrapper preserves the caller's working directory and ignores Python import overrides. Installation backs up an older copy of this Skill outside discovery and does not change other Skills, provider configuration or project environments. See [v0.3.0 installation](releases/v0.3.0.md#global-codex-installation).
+
+```sh
+analyze-video --workspace WORKSPACE codex next PROJECT --batch-size 12
+# Inspect the returned frames and fill response_template into batch-response.json.
+analyze-video --workspace WORKSPACE codex submit PROJECT --result batch-response.json
+analyze-video --workspace WORKSPACE codex status PROJECT
+```
+
+`next` prepares or reuses a request, then returns only the remaining batch, its ordered frame receipts, immediate eligible neighbors, audio paths, guide and response schema. The full immutable request stays on disk instead of being repeatedly pasted into the conversation. `prepare --compact` also prints only metadata when the full payload is unnecessary.
+
+`submit` validates an exact subset of that request and saves one bounded `data/codex_analysis_progress.json`. It does not change shots, review or report state until every selected shot has a valid proposal. The final submission uses the original apply/CAS path, rechecking all current evidence and preserving protected records. Identical retries reuse checkpointed results; different text for an existing row requires `submit --replace`. A new request cannot inherit old checkpointed rows.
+
+After interruption, call `next` again. If all rows were saved but the final commit failed, use `submit --finish` to retry it without resubmitting all text. Schema-invalid, stale and conflicting responses leave existing checkpoints and shots unchanged. A stale request must be prepared from current evidence.
+
+Caught commit failures restore the prior shots, annotation receipt, registry and manifest before returning the error. This recovery is tested at the actual receipt-write boundary. An abrupt process kill during the multi-file commit is fail-closed but is not automatically recovered; retained `.codex-analysis-rollback-*` files require deliberate recovery. Do not delete them or force a stale apply. A later human review supersedes only its own model row; unchanged Codex rows retain their input binding.
+
+Limits are explicit: at most 1024 eligible shots in a new request, 1–32 per submitted batch (default packet size 12), 1 MiB per response file, 8 MiB for the combined checkpoint and 32 MiB for the full request/receipt read boundary. Direct CLI/HTTP apply retains its 1 MiB response limit. The UI still uses the original full-request prepare/apply interface; bounded batches are a CLI/Skill capability. These are capacity bounds, not proof of semantic accuracy or constant processing time.
+
+Apply returns a `quality` review summary: single-frame shots and fields repeated across three or more shots. Repetition can be legitimate and is not automatically rejected. `semantic_accuracy=not_verified` and `human_review=required` remain explicit. Ordered stills improve temporal context; action phases, reactions, axis relationships and full storyboard coverage still require actual source inspection.
 
 Apply rechecks the request against current evidence under the project lock, rejects any drift, and uses the same protected-shot/CAS merge path as the existing analysis adapters. It invalidates previous report/export publication before mutation and does not call Finalize or a document renderer.
 

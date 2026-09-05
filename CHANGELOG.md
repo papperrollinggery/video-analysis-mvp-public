@@ -3,6 +3,38 @@
 All notable public changes are documented here. The project follows Semantic
 Versioning while its APIs and on-disk schemas remain pre-1.0.
 
+## [0.3.0] - 2026-09-05
+
+### Added
+
+- globally installable `video-evidence-workbench` Codex Skill with a wheel-bound
+  isolated runtime, cross-project invocation, upgrade backup and rollback;
+- bounded `codex next` / `codex submit` batches, checkpoints and retry support
+  for up to 1024 eligible shots;
+- ordered supporting frames, adjacent-shot context and explicit review targets
+  for repeated fields and single-frame evidence;
+- native video-only input handling without synthesizing an audio track.
+
+### Fixed
+
+- preserve a valid applied request on repeated prepare and keep v1 receipts
+  compatible; restore prior state after caught annotation commit failures;
+- retain model bindings alongside protected or subsequently reviewed human rows;
+- preserve single detected cuts and safely sample short CFR clips, including
+  single-frame and two-frame videos;
+- cover every selected shot in remake and reverse-engineering Markdown while
+  consolidating shared prompt controls;
+- remove cross-thread environment-patch interference and an invalid-response
+  fixture's premature-stdin-close race from the regression suite.
+
+### Verification boundary
+
+- model proposals still require review; schema validation does not establish
+  semantic accuracy or verified model identity;
+- external providers, general ASR accuracy, exact VFR PTS, Windows and automatic
+  recovery after abrupt process termination remain outside the tested scope;
+- package-registry publication and a hosted service are not part of this release.
+
 ## [0.2.2] - 2026-09-04
 
 ### Fixed
@@ -90,4 +122,5 @@ migration details.
 [0.2.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.0
 [0.2.1]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.1
 [0.2.2]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.2.2
+[0.3.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/releases/tag/v0.3.0
 [0.1.0]: https://github.com/papperrollinggery/video-analysis-mvp-public/commit/8419b3a1d1ff09cd355679f5d89d97f7ff524f86

@@ -225,11 +225,21 @@ def main(argv: list[str] | None = None) -> int:
 
     codex = sub.add_parser("codex", help="Use the current Codex task inside the existing analysis/review workflow; no extra API key.")
     codex_actions = codex.add_subparsers(dest="codex_action", required=True)
-    for action in ("prepare", "status", "apply"):
+    for action in ("prepare", "status", "apply", "next", "submit"):
         action_parser = codex_actions.add_parser(action)
         action_parser.add_argument("project_id")
         if action == "apply":
             action_parser.add_argument("--result", required=True, type=Path)
+        elif action == "prepare":
+            action_parser.add_argument("--refresh", action="store_true", help="Explicitly start a new analysis instead of reusing a current submission.")
+            action_parser.add_argument("--compact", action="store_true", help="Print request metadata without the full evidence payload.")
+        elif action == "next":
+            action_parser.add_argument("--batch-size", type=_positive_int, default=12)
+        elif action == "submit":
+            source = action_parser.add_mutually_exclusive_group(required=True)
+            source.add_argument("--result", type=Path)
+            source.add_argument("--finish", action="store_true", help="Retry committing a fully checkpointed response.")
+            action_parser.add_argument("--replace", action="store_true", help="Correct an already checkpointed shot intentionally.")
 
     migrate = sub.add_parser(
         "migrate",
@@ -378,9 +388,20 @@ def main(argv: list[str] | None = None) -> int:
 
             paths = ProjectPaths(resolve_project_root(args.project_id, workspace_path(args.workspace)))
             if args.codex_action == "prepare":
-                payload = prepare_codex_analysis(paths)
+                payload = prepare_codex_analysis(paths, refresh=args.refresh)
+                if args.compact:
+                    request = payload.pop("request")
+                    payload.update(request_id=request["request_id"], selected_shot_count=len(request["shots"]), excluded_shot_count=len(request["excluded_shots"]))
             elif args.codex_action == "apply":
                 payload = apply_codex_analysis(paths, read_codex_response(args.result))
+            elif args.codex_action == "next":
+                from .codex_batches import next_codex_batch
+
+                payload = next_codex_batch(paths, batch_size=args.batch_size)
+            elif args.codex_action == "submit":
+                from .codex_batches import submit_codex_batch
+
+                payload = submit_codex_batch(paths, read_codex_response(args.result) if args.result else None, replace=args.replace, finish=args.finish)
             else:
                 payload = codex_analysis_status(paths)
             print(json.dumps(payload, ensure_ascii=False, indent=2))

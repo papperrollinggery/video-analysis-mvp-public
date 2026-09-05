@@ -739,7 +739,15 @@ def _validate_vision_receipt(
         selected, annotated, skipped = [], [], []
     if len(selected) != len(set(selected)) or len(annotated) != len(set(annotated)) or len(skipped) != len(set(skipped)):
         reasons.append("vision receipt shot id lists contain duplicates")
-    if selected != shot_ids or annotated != shot_ids or skipped:
+    if provider == "codex":
+        # The native request excludes protected human/rejected shots. Its
+        # selected scope has already been validated against the bound request.
+        scope_ids = selected
+        if not selected or selected != annotated or skipped or not set(selected) <= set(shot_ids):
+            reasons.append("Codex receipt must annotate its bound selected scope exactly once")
+    else:
+        scope_ids = shot_ids
+    if provider != "codex" and (selected != shot_ids or annotated != shot_ids or skipped):
         reasons.append("vision receipt must annotate every current shot exactly once")
 
     shot_receipts = _index_dicts(receipt.get("shot_receipts"), "shot_id")
@@ -748,7 +756,7 @@ def _validate_vision_receipt(
     if shot_receipts is None or input_frames is None or annotations is None:
         reasons.append("vision receipt per-shot records are invalid or duplicated")
         shot_receipts, input_frames, annotations = {}, {}, {}
-    if set(shot_receipts) != set(shot_ids) or set(input_frames) != set(shot_ids) or set(annotations) != set(shot_ids):
+    if set(shot_receipts) != set(scope_ids) or set(input_frames) != set(scope_ids) or set(annotations) != set(scope_ids):
         reasons.append("vision receipt per-shot records do not match current shots")
 
     globally_valid = not reasons and media_result.get("valid") is True
@@ -756,6 +764,15 @@ def _validate_vision_receipt(
     if globally_valid:
         for shot in shots:
             shot_id = shot.shot_id
+            if shot_id not in scope_ids:
+                continue
+            if provider == "codex" and (
+                (shot.annotation_source or "").strip().lower() == "human"
+                or shot.readiness_status == "rejected"
+            ):
+                # A later human review supersedes that model row; it must not
+                # revoke the unchanged model bindings of other selected shots.
+                continue
             shot_receipt = shot_receipts[shot_id]
             frame_receipt = input_frames[shot_id]
             annotation = annotations[shot_id]
@@ -784,7 +801,14 @@ def _validate_vision_receipt(
                 verified.add(shot_id)
     result["verified_shot_ids"] = verified
     result["reasons"] = _unique(reasons)
-    result["complete"] = not reasons and verified == set(shot_ids) and bool(shots)
+    expected_verified = {
+        shot.shot_id for shot in shots
+        if provider != "codex" or (
+            (shot.annotation_source or "").strip().lower() == "codex"
+            and shot.readiness_status != "rejected"
+        )
+    }
+    result["complete"] = not reasons and verified == expected_verified and bool(verified)
     return result
 
 

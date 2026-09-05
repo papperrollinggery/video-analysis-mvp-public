@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Evidence Workbench"
+  short_description: "在 Codex 中完成视频证据拆解、分批续做、质量复核与交付导出"
+  default_prompt: "使用 $video-evidence-workbench 分析这个视频，按我的用途完成镜头与声音拆解，并给出可回查的证据和交付物。"

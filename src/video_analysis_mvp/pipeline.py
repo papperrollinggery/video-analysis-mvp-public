@@ -35,8 +35,12 @@ def run_full_pipeline(
     set_delivery_language(paths, media, delivery_language)
     analyze_visual(media, paths)
     analyze_audio(media, paths, language=language, skip_asr=skip_asr, asr_model=asr_model)
-    asr = audio_intelligence_binding(paths)["capabilities"]["asr"]
-    audio_actions = [f"ASR: {asr['status']}. {asr['reason']}"] if asr["reason"] else []
+    if media.audio_path:
+        asr = audio_intelligence_binding(paths)["capabilities"]["asr"]
+        audio_actions = [f"ASR: {asr['status']}. {asr['reason']}"] if asr["reason"] else []
+    else:
+        asr = {"status": "not_applicable", "reason": "source media has no audio stream"}
+        audio_actions = ["Audio: source media has no audio stream; no PCM baseline or audio timeline was generated."]
     vision_result = annotate_project_with_vision(paths) if with_vision else None
     report = synthesize(paths)
     if vision_result is not None and vision_result.status != "success":
@@ -51,7 +55,11 @@ def run_full_pipeline(
         )
     return StatusEnvelope(
         status="warning" if asr["status"] == "failed" else "success",
-        summary=f"Project {media.project_id} baseline analysis completed. ASR: {asr['status']}; audio identities require evidence-backed review.",
+        summary=(
+            f"Project {media.project_id} baseline analysis completed. Source has no audio stream; no audio measurements were generated."
+            if not media.audio_path
+            else f"Project {media.project_id} baseline analysis completed. ASR: {asr['status']}; audio identities require evidence-backed review."
+        ),
         next_actions=audio_actions + [
             "Open report.html for evidence review.",
             "When working in Codex, run `analyze-video codex prepare <project-id>` with the same workspace, follow its built-in guide, then submit through `codex apply`; no extra API key is required.",
@@ -78,16 +86,18 @@ def run_ingest_only(
         password=password,
         max_duration_seconds=max_duration_seconds,
     )
+    artifacts = {
+        "project": str(paths.root),
+        "media_package": str(paths.data / "media_package.json"),
+        "review_copy": media.review_copy_path,
+    }
+    if media.audio_path:
+        artifacts["audio_wav"] = media.audio_path
     return StatusEnvelope(
         status="success",
         summary=f"Project {media.project_id} ingested successfully.",
         next_actions=["Run visual/audio analysis or the full pipeline."],
-        artifacts={
-            "project": str(paths.root),
-            "media_package": str(paths.data / "media_package.json"),
-            "review_copy": media.review_copy_path,
-            "audio_wav": media.audio_path,
-        },
+        artifacts=artifacts,
     )
 
 
@@ -110,19 +120,32 @@ def run_audio(project_id: str, workspace: str | None = None, language: str = "au
     paths = project_paths(project_id, workspace_path(workspace))
     media = load_media(paths)
     transcript, beats, music = analyze_audio(media, paths, language=language, skip_asr=skip_asr, asr_model=asr_model)
-    binding = audio_intelligence_binding(paths)
-    asr = binding["capabilities"]["asr"]
+    if media.audio_path:
+        binding = audio_intelligence_binding(paths)
+        asr = binding["capabilities"]["asr"]
+    else:
+        asr = {"status": "not_applicable", "reason": "source media has no audio stream"}
+    artifacts = {
+        "transcript": str(paths.data / "transcript.json"),
+        "subtitles": str(paths.reports / "transcript.srt"),
+        "beats": str(paths.data / "beats.json"),
+        "music_profile": str(paths.data / "music_profile.json"),
+    }
+    if media.audio_path:
+        artifacts["audio_intelligence"] = str(paths.data / "audio_intelligence.json")
     return StatusEnvelope(
         status="warning" if asr["status"] == "failed" else "success",
-        summary=f"Generated input-bound PCM baseline, {len(beats)} onset candidates, and {len(transcript)} transcript segments. ASR: {asr['status']}. Music/SFX/VO identity remains unclassified.",
-        next_actions=["Review capability status in audio_intelligence.json before interpreting empty transcripts as silence."] + ([asr["reason"]] if asr["reason"] else []),
-        artifacts={
-            "transcript": str(paths.data / "transcript.json"),
-            "subtitles": str(paths.reports / "transcript.srt"),
-            "beats": str(paths.data / "beats.json"),
-            "music_profile": str(paths.data / "music_profile.json"),
-            "audio_intelligence": str(paths.data / "audio_intelligence.json"),
-        },
+        summary=(
+            "Source media has no audio stream. Wrote empty legacy audio outputs without creating a PCM baseline or audio timeline."
+            if not media.audio_path
+            else f"Generated input-bound PCM baseline, {len(beats)} onset candidates, and {len(transcript)} transcript segments. ASR: {asr['status']}. Music/SFX/VO identity remains unclassified."
+        ),
+        next_actions=(
+            ["No audio stream was present; empty transcript and beat outputs do not indicate measured silence."]
+            if not media.audio_path
+            else ["Review capability status in audio_intelligence.json before interpreting empty transcripts as silence."] + ([asr["reason"]] if asr["reason"] else [])
+        ),
+        artifacts=artifacts,
     )
 
 

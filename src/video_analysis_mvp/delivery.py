@@ -581,11 +581,11 @@ def write_remake_brief(
         "Creative lead reviewing what to keep, remake, or generate next.",
         "",
         "## Core Sell / Message",
-        "Review the original ad and move the clearest product promise or viewer pain into the first 3 seconds.",
+        "Derive any product promise, viewer pain, or CTA only from reviewed shot evidence; this draft does not infer a claim from missing annotations.",
         "",
         "## Shot Sequence",
     ]
-    for shot in shots[:12]:
+    for shot in shots:
         lines.append(
             "- "
             f"{_markdown_inline(shot.timecode)}: "
@@ -602,17 +602,33 @@ def write_remake_brief(
             "## Sound / Rhythm Notes",
             _markdown_inline(music_note),
             "",
-            "## Prompt Reverse Engineering",
-            "- Visual style: derive from approved keyframes; keep uncertain fields explicit.",
-            "- Subject/action: use the shot table as the source of truth.",
-            "- Camera/motion: do not invent lens or equipment when not visible.",
-            "- Negative prompt: avoid off-brand artifacts, unreadable text, inconsistent hands/faces, and unmotivated camera movement.",
+            "## Shared Generation Constraints",
+            "- Derive visual style from approved keyframes; keep uncertain fields explicit.",
+            "- Use the shot table for subject and action; do not invent lens, equipment, claims, subtitles, or CTA.",
+            "- Apply shared negative constraints from `prompt_reverse_engineering.md` or `model_prompt_pack.json` once per generation job.",
             "",
-            "## Branches",
-            "- safer: keep structure, tighten pacing, clarify CTA.",
-            "- stronger_hook: rebuild the first 3 seconds around pain/outcome.",
-            "- premium_style: improve visual trust without losing short-form directness.",
-            "",
+        ]
+    )
+    if _has_specific_creative_evidence(shots):
+        lines.extend(
+            [
+                "## Branches",
+                "- safer: keep the evidenced shot order and clarify only reviewed copy.",
+                "- stronger_hook: test an opening variation only after a reviewed pain, outcome, or claim is identified.",
+                "- premium_style: test a visual-trust variation only against approved reference frames.",
+                "",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "## Branch Decision Pending Evidence Review",
+                "- No hook, pain point, CTA, or style branch is proposed because the supplied shots do not contain reviewed creative evidence.",
+                "",
+            ]
+        )
+    lines.extend(
+        [
             "## Human Review Checklist",
             "- Confirm hook claim is accurate.",
             "- Confirm on-screen text and voiceover are not fabricated.",
@@ -636,22 +652,17 @@ def write_prompt_reverse_engineering(media: CanonicalMediaPackage, shots: list[S
         "- 不确定的镜头、灯光、器材、品牌承诺必须保留为未知，不补编。" if lang == "zh" else "- Keep unknown lens, lighting, and production details explicit.",
         "- 正式给模型前，优先复制 `model_prompt_pack.json` 中对应模型块。" if lang == "zh" else "- For generation, prefer the matching model block in `model_prompt_pack.json`.",
         "",
-        "## 模型适配方式" if lang == "zh" else "## Model Adapters",
-        "- `universal_text_to_video`: 通用文本生视频，适合先跑粗样。" if lang == "zh" else "- `universal_text_to_video`: generic text-to-video prompt.",
-        "- `image_to_video`: 以主帧/关键帧为参考，适合重做同构镜头。" if lang == "zh" else "- `image_to_video`: use the primary frame as visual reference.",
-        "- `runway_gen_style`: 强调镜头运动、主体运动、负面约束。" if lang == "zh" else "- `runway_gen_style`: camera motion, subject motion, negative constraints.",
-        "- `kling_style_json`: 严格 JSON 字段，便于脚本映射和批量生成。" if lang == "zh" else "- `kling_style_json`: strict JSON fields for automation.",
-        "- `veo_sora_narrative`: 更完整的电影化自然语言描述。" if lang == "zh" else "- `veo_sora_narrative`: longer cinematic natural-language prompt.",
-        "- `luma_pika_edit`: 更适合图生视频或局部改动的保留/修改描述。" if lang == "zh" else "- `luma_pika_edit`: preservation and edit instructions for image-to-video/edit flows.",
+        "## 全片共用生成约束" if lang == "zh" else "## Shared Generation Controls",
+        "- 所有镜头共用负面约束：" if lang == "zh" else "- Shared negative constraints for every shot:",
+        _markdown_code_block(_negative_prompt(lang)),
+        "- 每镜使用 `primary_frame_ref`、时长和画幅比作为控制。完整的模型字段只在 `model_prompt_pack.json` 保留一份。" if lang == "zh" else "- Use each shot's `primary_frame_ref`, duration, and aspect ratio as controls. The complete model-specific fields live once in `model_prompt_pack.json`.",
         "",
         "## 逐镜头提示词" if lang == "zh" else "## Shot Prompts",
     ]
-    for shot in shots[:12]:
+    for shot in shots:
         adapter = build_prompt_adapter(shot, media)
         universal = adapter["universal_text_to_video"]
-        image_to_video = adapter["image_to_video"]
-        kling = adapter["kling_style_json"]
-        veo = adapter["veo_sora_narrative"]
+        controls = _generation_controls(adapter)
         lines.extend(
             [
                 f"### {_markdown_inline(shot.timecode or shot.shot_id)}",
@@ -664,19 +675,51 @@ def write_prompt_reverse_engineering(media: CanonicalMediaPackage, shots: list[S
                 f"- 镜头语言: {_markdown_inline(_camera_text(shot, lang, include_composition=True))}"
                 if lang == "zh"
                 else f"- Camera/composition: {_markdown_inline(_camera_text(shot, lang, include_composition=True))}",
+                f"- 生成控制: {_markdown_inline(controls)}"
+                if lang == "zh"
+                else f"- Generation controls: {_markdown_inline(controls)}",
+                f"- 复拍/生成控制: {_markdown_inline(_shot_remake(shot, lang))}"
+                if lang == "zh"
+                else f"- Remake/generation control: {_markdown_inline(_shot_remake(shot, lang))}",
                 "",
-                "#### 通用文本生视频" if lang == "zh" else "#### Universal Text-to-Video",
+                "#### 该镜通用提示词" if lang == "zh" else "#### Shot-Specific Prompt",
                 _markdown_code_block(universal["prompt"]),
-                "#### 图生视频 / 参考帧" if lang == "zh" else "#### Image-to-Video / Reference Frame",
-                _markdown_code_block(image_to_video["prompt"]),
-                "#### 严格 JSON 模板" if lang == "zh" else "#### Strict JSON Template",
-                _markdown_code_block(json.dumps(kling, ensure_ascii=False, indent=2), language="json"),
-                "#### 电影化叙述模板" if lang == "zh" else "#### Cinematic Narrative Template",
-                _markdown_code_block(veo["prompt"]),
                 "",
             ]
         )
     atomic_write_text(path, "\n".join(lines).rstrip() + "\n")
+
+
+def _has_specific_creative_evidence(shots: list[Shot]) -> bool:
+    """Whether any shot contains a concrete observation worth branching on.
+
+    Defaults such as ``unknown`` and ``TBD`` are deliberately excluded: they
+    are a request for review, not evidence for a hook or a style recommendation.
+    """
+    return any(
+        _filled(value)
+        for shot in shots
+        for value in (
+            shot.content_summary,
+            shot.content_summary_zh,
+            shot.visual_description,
+            shot.subject,
+            shot.subject_zh,
+            shot.action,
+            shot.action_zh,
+            shot.style_notes,
+            shot.style_notes_zh,
+            shot.remake_notes,
+            shot.remake_notes_zh,
+        )
+    )
+
+
+def _generation_controls(adapter: dict[str, Any]) -> str:
+    return (
+        f"duration {adapter['duration_seconds']}s; aspect ratio {adapter['aspect_ratio']}; "
+        f"reference {adapter['primary_frame_ref']}"
+    )
 
 
 def write_model_prompt_pack(media: CanonicalMediaPackage, shots: list[Shot], path: Path) -> None:

@@ -112,6 +112,7 @@ ARTIFACT_SPECS: tuple[ArtifactSpec, ...] = (
     _spec("music_profile_json", "data/music_profile.json", scope="analysis"),
     _spec("vision_annotations", "data/vision_annotations.json", scope="review", group="provenance", label="Current vision provider receipt", list_in_workspace=True),
     _spec("codex_analysis_request", "data/codex_analysis_request.json", scope="review", group="companion", label="Current Codex analysis request", list_in_workspace=True),
+    _spec("codex_analysis_progress", "data/codex_analysis_progress.json", scope="review", group="companion", label="Checkpointed Codex analysis proposals"),
     _spec("overview_pdf", "reports/overview.pdf", scope="report", group="primary", label="Overview export", report_member=True, list_in_workspace=True),
     _spec("report_html", "reports/report.html", scope="report", group="primary", label="Shot analysis report", report_member=True, list_in_workspace=True),
     _spec("storyboard_html", "reports/storyboard.html", scope="report", group="primary", label="Storyboard", report_member=True, list_in_workspace=True),

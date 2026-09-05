@@ -56,7 +56,11 @@ class AudioProviderTest(unittest.TestCase):
                 "output_limit",
                 True,
             ),
-            (self.config(self.adapter("print('not-json')")), "invalid_response", True),
+            (
+                self.config(self.adapter("import sys; sys.stdin.read(); print('not-json')")),
+                "invalid_response",
+                True,
+            ),
         ]
         for config, reason, called in cases:
             with self.subTest(reason=reason):

@@ -53,10 +53,30 @@ def analyze_audio(
 ) -> tuple[list[TranscriptSegment], list[BeatEvent], list[MusicProfile]]:
     from .audio_intelligence import stage_and_commit_audio_intelligence, validate_audio_timeline
     from ._audio_intelligence_storage import file_receipt
+    from .media import verify_media_generation
 
-    audio_path = Path(media.audio_path)
     if not isinstance(language, str) or (language != "auto" and re.fullmatch(r"[A-Za-z]{2,3}", language) is None):
         raise ValueError("Audio language must be auto or a two/three-letter language code")
+    if media.audio_path == "":
+        from .store import load_media
+
+        if load_media(paths).audio_path != "":
+            raise ValueError("No-audio request does not match the current media package")
+        valid, reasons = verify_media_generation(paths)
+        if not valid:
+            raise ValueError("No-audio media verification failed: " + "; ".join(reasons))
+        timeline_paths = (
+            paths.data / "audio_intelligence.json",
+            paths.data / "audio_intelligence_generation.json",
+        )
+        if any(os.path.lexists(path) for path in timeline_paths):
+            raise ValueError("Audio timeline conflicts with verified no-audio media")
+        with advisory_file_lock(paths.data / ".shots.lock", root=paths.root):
+            _ensure_no_human_audio_decisions(paths)
+            _stage_and_commit_audio_generation(paths, [], [], [])
+        return [], [], []
+
+    audio_path = Path(media.audio_path)
     if os.path.abspath(audio_path) != os.path.abspath(paths.assets / "audio.wav"):
         raise ValueError("Audio analysis requires the canonical project audio WAV")
     with snapshot_audio(audio_path) as snapshot:
@@ -120,12 +140,39 @@ def _add_transcription(dataset: dict[str, Any], result: TranscriptionResult) -> 
 
 
 def verify_audio_analysis(paths: ProjectPaths) -> tuple[bool, list[str]]:
-    """New runs require both legacy outputs and the input-bound timeline."""
+    """Verify a bound audio timeline, or empty records for a no-audio source."""
     from .audio_intelligence import audio_intelligence_binding
+    from .media import verify_media_generation
+    from .store import load_media
 
     valid, reasons = verify_audio_generation(paths)
     if not valid:
         return valid, reasons
+    try:
+        media = load_media(paths)
+    except Exception as exc:
+        return False, [f"media package is unreadable: {exc}"]
+    if media.audio_path == "":
+        media_valid, media_reasons = verify_media_generation(paths)
+        if not media_valid:
+            return False, media_reasons
+        if any(
+            os.path.lexists(path)
+            for path in (
+                paths.data / "audio_intelligence.json",
+                paths.data / "audio_intelligence_generation.json",
+            )
+        ):
+            return False, ["audio timeline conflicts with verified no-audio media"]
+        if any(load_json(paths.data / name) != [] for name in ("transcript.json", "beats.json", "music_profile.json")):
+            return False, ["non-empty audio records conflict with verified no-audio media"]
+        return True, []
+    audio_path = Path(media.audio_path)
+    try:
+        if audio_path.resolve(strict=True) != (paths.assets / "audio.wav").resolve() or not audio_path.is_file() or audio_path.stat().st_size <= 0:
+            raise ValueError("canonical audio WAV is missing or invalid")
+    except (OSError, ValueError):
+        return False, ["canonical audio WAV is missing or invalid"]
     try:
         audio_intelligence_binding(paths)
     except ValueError as exc:

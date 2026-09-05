@@ -174,13 +174,17 @@ def _ingest_source_locked(
             max_duration_seconds=max_duration_seconds,
             max_source_bytes=max_source_bytes,
         )
+        source_has_audio = _has_audio_stream(master_metadata)
         _build_review_copy(master_path, review_path, review_height)
-        _extract_audio(review_path, audio_path)
         metadata = _validate_media_file(
             review_path,
             max_duration_seconds=max_duration_seconds,
             max_source_bytes=max_source_bytes,
         )
+        if _has_audio_stream(metadata) != source_has_audio:
+            raise ValueError("Review copy audio streams do not match the source media")
+        if source_has_audio:
+            _extract_audio(review_path, audio_path)
         duration, frame_rate, resolution, aspect_ratio = parse_video_metadata(metadata)
     except Exception:
         _cleanup_failed_ingest(paths)
@@ -192,7 +196,7 @@ def _ingest_source_locked(
         source=persisted_source,
         local_master_path=str(master_path),
         review_copy_path=str(review_path),
-        audio_path=str(audio_path),
+        audio_path=str(audio_path) if source_has_audio else "",
         duration_seconds=duration,
         frame_rate=frame_rate,
         resolution=resolution,
@@ -206,19 +210,22 @@ def _ingest_source_locked(
                 "schema_version": "1.0",
                 "master": _media_file_receipt(master_path, master_metadata),
                 "review": _media_file_receipt(review_path, metadata),
+                "audio_stream_present": source_has_audio,
             },
         },
     )
     dump_json(paths.data / "media_package.json", package)
+    artifacts = {
+        "media_package": str(paths.data / "media_package.json"),
+        "review_copy": str(review_path),
+    }
+    if source_has_audio:
+        artifacts["audio_wav"] = str(audio_path)
     write_manifest(
         paths,
         package,
         "ingested",
-        {
-            "media_package": str(paths.data / "media_package.json"),
-            "review_copy": str(review_path),
-            "audio_wav": str(audio_path),
-        },
+        artifacts,
     )
     return package
 
@@ -522,6 +529,14 @@ def _media_file_receipt(path: Path, metadata: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _has_audio_stream(metadata: dict[str, Any]) -> bool:
+    streams = metadata.get("streams")
+    return isinstance(streams, list) and any(
+        isinstance(stream, dict) and stream.get("codec_type") == "audio"
+        for stream in streams
+    )
+
+
 def verify_media_generation(paths: ProjectPaths) -> tuple[bool, list[str]]:
     """Verify that the canonical media files still match the ingest receipt."""
     try:
@@ -534,6 +549,7 @@ def verify_media_generation(paths: ProjectPaths) -> tuple[bool, list[str]]:
     if not isinstance(receipt, dict) or receipt.get("schema_version") != "1.0":
         return False, ["media receipt is missing or unsupported"]
     reasons: list[str] = []
+    declared_audio_present = media.audio_path != ""
     expected = {
         "master": (Path(media.local_master_path), receipt.get("master")),
         "review": (Path(media.review_copy_path), receipt.get("review")),
@@ -553,18 +569,36 @@ def verify_media_generation(paths: ProjectPaths) -> tuple[bool, list[str]]:
                 reasons.append(f"{label} media size does not match its receipt")
             if _sha256_regular_file(canonical) != stored.get("sha256"):
                 reasons.append(f"{label} media digest does not match its receipt")
+            if not declared_audio_present:
+                try:
+                    actual_audio_present = _has_audio_stream(ffprobe_metadata(canonical))
+                except Exception as exc:
+                    reasons.append(f"{label} media audio stream could not be verified: {exc}")
+                else:
+                    if actual_audio_present:
+                        reasons.append(
+                            f"{label} media audio stream does not match the media package declaration"
+                        )
         except (OSError, ValueError) as exc:
             reasons.append(f"{label} media is missing or unsafe: {exc}")
-    audio = Path(media.audio_path)
-    try:
-        if audio.is_symlink():
-            raise ValueError("symlinks are not allowed")
-        canonical_audio = audio.resolve(strict=True)
-        canonical_audio.relative_to(paths.root.resolve())
-        if not canonical_audio.is_file() or canonical_audio.is_symlink() or canonical_audio.stat().st_size <= 0:
-            raise ValueError("not a non-empty regular project file")
-    except (OSError, ValueError) as exc:
-        reasons.append(f"audio media is missing or unsafe: {exc}")
+    declared_in_receipt = receipt.get("audio_stream_present")
+    if not declared_audio_present and declared_in_receipt is not False:
+        reasons.append("media receipt audio stream declaration is invalid")
+    elif declared_audio_present and declared_in_receipt is not None and declared_in_receipt is not True:
+        reasons.append("media receipt audio stream declaration is invalid")
+    if declared_audio_present:
+        audio = Path(media.audio_path)
+        try:
+            if audio.is_symlink():
+                raise ValueError("symlinks are not allowed")
+            canonical_audio = audio.resolve(strict=True)
+            canonical_audio.relative_to(paths.root.resolve())
+            if canonical_audio != (paths.assets / "audio.wav").resolve() or not canonical_audio.is_file() or canonical_audio.is_symlink() or canonical_audio.stat().st_size <= 0:
+                raise ValueError("not the canonical non-empty regular project audio WAV")
+        except (OSError, ValueError) as exc:
+            reasons.append(f"audio media is missing or unsafe: {exc}")
+    elif os.path.lexists(paths.assets / "audio.wav"):
+        reasons.append("audio WAV exists even though the source media has no audio stream")
     return not reasons, reasons
 
 
@@ -613,6 +647,10 @@ def _build_review_copy(master_path: Path, review_path: Path, review_height: int)
                 "-y",
                 "-i",
                 str(master_path),
+                "-map",
+                "0:v:0",
+                "-map",
+                "0:a?",
                 "-vf",
                 f"scale=-2:min({review_height}\\,ih)",
                 "-c:v",
