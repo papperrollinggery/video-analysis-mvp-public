@@ -5,7 +5,7 @@
   "candidate": {
     "scope": "Local v0.3.0 candidate; exact commit/tag CI and publication are independent external gates",
     "file_count": 226,
-    "sha256": "184e95ef6804fcd48f9394226e905fd887f8ea05dc76aa616e8ea5e508bb04c9",
+    "sha256": "f80dc1ff2a9ae79771b60339b72a568736070c21a3e77bbb68eca51393dfa1f8",
     "hash_algorithm": "sha256(mode\\0path\\0size\\0bytes\\0 for each UTF-8 path in sorted Git candidate order)",
     "excluded_paths": [
       "docs/cold-review.md",
@@ -109,6 +109,11 @@
       "command": "byte-compare final clean-built release wheel against every current src/video_analysis_mvp file; reinstall that same wheel globally",
       "exit_code": 0,
       "result": "54 package files match exactly, four frontend files, zero stale/missing files; clean-wheel runtime retains the applied global test request"
+    },
+    {
+      "id": "minimum_ci_media_runtime_fix",
+      "command": "Install ffmpeg in the declared-minimum GitHub job before running real media tests",
+      "result": "First main CI exposed a missing native executable; Python dependencies remain at their declared minimum. The workflow now installs the same required media tool as the other Python jobs. Exact retry CI is an external gate."
     }
   ],
   "runtime": {
@@ -163,7 +168,7 @@
       "installer_sha256": "ccfd4c760d1a967fe83590e80aa2ad44995837033d79c0aac6c3848b1cb641a8",
       "wrapper_sha256": "45ac74ba91faa79dd36d40fb2851bce5b7c8d647a71cc4962e1dfbde10ea7a94",
       "boundary": "No prior version verdict is inherited. Exact main/tag checks and release publication remain external gates.",
-      "frozen_candidate_sha256": "184e95ef6804fcd48f9394226e905fd887f8ea05dc76aa616e8ea5e508bb04c9"
+      "frozen_candidate_sha256": "f80dc1ff2a9ae79771b60339b72a568736070c21a3e77bbb68eca51393dfa1f8"
     }
   },
   "evidence_files": [
@@ -180,7 +185,7 @@
     {
       "path": "docs/screenshots/ui-acceptance-receipt.json",
       "size_bytes": 9541,
-      "sha256": "f0eec50f7241d9d5a69f21e620de13d96ff0675e2011121e92670cea23430d46"
+      "sha256": "a10a9637bd9c7d081b765cd4e5fcf408bc21af9dea2a98668d1ecd07f5b6a187"
     },
     {
       "path": "progress.txt",
