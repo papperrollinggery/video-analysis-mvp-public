@@ -47,7 +47,7 @@ export = [
   "openpyxl>=3.1.5,<4",
 ]
 pdf = [
-  "pypdf>=6,<7",
+  "pypdf>=6,<8",
 ]
 
 [project.scripts]
